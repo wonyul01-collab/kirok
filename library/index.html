@@ -25,6 +25,7 @@
 .topics{display:flex;gap:2px;flex-wrap:wrap;border-bottom:1.5px solid var(--ink);padding:14px 22px 0;background:var(--paper);position:sticky;top:62px;z-index:5}
 .topics button{border:1px solid var(--line);border-bottom:0;background:#EFECE4;padding:8px 13px;font:inherit;font-size:15.5px;cursor:pointer;border-radius:6px 6px 0 0;color:var(--ink)}
 .topics button[aria-pressed=true]{background:var(--green);border-color:var(--green);color:#fff;font-weight:700}
+.chart-note{margin:0;padding:10px 22px;font-size:15px;background:var(--green-soft);color:var(--green-deep);border-bottom:1px solid var(--line)}
 .now{padding:12px 22px;border-bottom:1px solid var(--line);background:var(--white);font-size:16px}
 .list{padding:6px 22px 100px}
 .item{display:grid;grid-template-columns:minmax(0,1fr) 190px;gap:18px;padding:18px 0;border-bottom:1px solid var(--line)}
@@ -104,7 +105,7 @@
   var main=document.getElementById('main'), gnav=document.getElementById('groups');
   function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})}
   function safeUrl(u){u=String(u||'');return /^https?:\/\//i.test(u)?u:'#'}
-  function text(r){return [r.group,r.title,r.summary_ko,r.key_number,r.org_or_authors].join(' ')}
+  function text(r){return [r.group,r.subgroup,r.title,r.summary_ko,r.key_number,r.org_or_authors].join(' ')}
   function navDraw(){
     gnav.querySelectorAll('button,hr').forEach(function(x){x.remove()});
     GROUPS.forEach(function(g,i){var b=document.createElement('button');b.setAttribute('aria-selected',gi===i);var n=data.filter(g.match).length;b.innerHTML=g.name+'<span>'+(n||'')+'</span>';b.onclick=function(){gi=i;ti=0;draw();history.replaceState(null,'','#'+g.id)};gnav.appendChild(b);});
@@ -114,7 +115,7 @@
   function itemHtml(r,i){
     var isPaper=r.type==='논문', isYt=r.type==='유튜브';
     return '<article class="item" id="r'+i+'"><div><h3><a href="'+esc(safeUrl(r.url))+'" target="_blank" rel="noopener">'+esc(r.title)+'</a></h3>'+
-      '<div class="who">'+esc(r.org_or_authors)+(r.year?' ('+esc(r.year)+')':'')+(isYt?' · 유튜브':'')+'</div>'+
+      '<div class="who">'+(r.subgroup&&r.type==='논문'?esc(r.subgroup)+' · ':'')+esc(r.org_or_authors)+(r.year?' ('+esc(r.year)+')':'')+(isYt?' · 유튜브 영상':'')+(r.lang==='en'?' · 영어':'')+'</div>'+
       '<p class="sum">'+esc(r.summary_ko)+'</p>'+(r.key_number?'<div class="key"><b>핵심 숫자</b> '+esc(r.key_number)+'</div>':'')+'</div>'+
       '<div class="side">'+(r.type?'<div><b>종류</b>'+esc(r.type)+'</div>':'')+(r.evidence_level?'<div><b>근거 수준</b><span class="lvl">'+esc(r.evidence_level)+'</span></div>':'')+(r.audience?'<div><b>누구에게</b>'+esc(r.audience)+'</div>':'')+(r.checked?'<div><b>확인한 날</b>'+esc(r.checked)+'</div>':'')+'</div></article>';
   }
@@ -124,6 +125,7 @@
     var g=GROUPS[gi];
     var html='<div class="topics" role="group" aria-label="주제">'+TOPICS.map(function(t,i){return '<button type="button" aria-pressed="'+(i===ti)+'" data-i="'+i+'">'+t[0]+'</button>'}).join('')+'</div>';
     var list=data.filter(g.match).filter(function(r){return !TOPICS[ti][1]||TOPICS[ti][1].test(text(r))});
+    html+='<p class="chart-note">키록은 현행 질병관리청 2017 소아청소년 성장도표를 쓰며, 2027 개정판(2027년 12월 말 공표 예정)이 나오면 바꿔 반영합니다. <a href="https://www.kdca.go.kr/bbs/kdca/42/313000/artclView.do?layout=unknown" target="_blank" rel="noopener">질병관리청 안내</a></p>';
     html+='<div class="now"><b>'+g.name+'</b> '+(ti?'· '+TOPICS[ti][0]+' ':'')+'자료 '+list.length+'건</div><div class="list">';
     if(!data.length) html+='<p class="empty">자료를 정리해 올리는 중입니다. 그동안 <a href="#evidence" onclick="return false" id="toev">근거로 보는 성장</a>을 먼저 읽어 보세요.</p>';
     else if(!list.length) html+='<p class="empty">이 주제의 자료는 아직 없어요. 다른 주제나 묶음을 골라 보세요.</p>';
@@ -134,28 +136,47 @@
     var te=document.getElementById('toev'); if(te)te.onclick=function(){gi=5;draw();return false};
   }
   /* 근거로 보는 성장: 고정 출처 [1]~[8] + 자료실 같은 주제 자료 */
+  /* 출처: 자료실 resources.json 의 제목 일부로 찾아 연결. 자료실에 없는 것만 고정 주소 */
   var REFS=[
-    'Kim S, Yoo JH, Chueh HW. Tanner’s target height formula underestimates final adult height in Korean adolescents and young adults. BMJ Paediatrics Open 2024;8:e002653.',
-    '질병관리청·대한소아청소년과학회. 2017 소아청소년 성장도표.',
-    'Gaete X 외. Hormone Research in Paediatrics 2025;98(1):66-74. 칠레 여아 534명, 초경 뒤 4년 추적.',
-    'Paruthi S 외. Recommended amount of sleep for pediatric populations: a consensus statement of the American Academy of Sleep Medicine. Journal of Clinical Sleep Medicine 2016;12(6):785-786.',
-    'Van Cauter E, Plat L. Physiology of growth hormone secretion during sleep. Journal of Pediatrics 1996;128(5 Pt 2):S32-37.',
-    'World Health Organization. WHO guidelines on physical activity and sedentary behaviour. 2020.',
-    'de Beer H. Dairy products and physical stature: a systematic review and meta-analysis of controlled trials. Economics & Human Biology 2012;10(3):299-309.',
-    'NCD Risk Factor Collaboration. A century of trends in adult human height. eLife 2016;5:e13410.'
+    {k:"Tanner's target height formula underestimates",t:'Kim S 외. BMJ Paediatrics Open 2024'},
+    {k:"Accurate Prediction of Children",t:'Zeevi D 외. 2024'},
+    {k:"The 2017 Korean National Growth Charts",t:'Kim JH 외. Korean J Pediatr 2018 (2017 성장도표)'},
+    {k:"2027 소아청소년 성장도표 개정",t:'질병관리청 보도자료 2026-10-21'},
+    {k:"Healthy Sleep Habits",t:'미국소아과학회 HealthyChildren.org: 권장 수면 시간'},
+    {k:"Physiology of growth hormone secretion during sleep",t:'Van Cauter E, Plat L. J Pediatr 1996'},
+    {k:"Acute Sleep Disruption",t:'Calvert ME 외. 2022'},
+    {k:"Reduced Slow Wave Sleep",t:'Chen Z 외. Nat Sci Sleep 2025'},
+    {k:"Sleep and weight-height development",t:'El Halal CDS, Nunes ML. J Pediatr (Rio J) 2019'},
+    {k:"WHO guidelines on physical activity and sedentary behaviour (2020)",t:'WHO 신체활동 권고 2020'},
+    {k:"Effects of physical activity on children's growth",t:'Alves JGB, Alves GV. J Pediatr (Rio J) 2019'},
+    {k:"Bone response to jumping",t:'Johannsen N 외. 2003'},
+    {k:"Effects of Taekwondo Training",t:'Jeong G 외. Children 2023'},
+    {k:"Effects of Milk and Milk-Product",t:'Kang K 외. Adv Nutr 2019'},
+    {k:"The Effects of Dairy Product Supplementation",t:'Hidayat K 외. Adv Nutr 2023'},
+    {k:"Dairy consumption and female height growth",t:'Berkey CS 외. 2009'},
+    {k:"Influence of Vitamin D Supplementation on Growth",t:'Ganmaa D 외. 2023'},
+    {k:null,t:'Gaete X 외. Hormone Research in Paediatrics 2025;98(1):66-74 (칠레 여아 534명, 초경 뒤 4년 추적)',u:'https://doi.org/10.1159/000536506'},
+    {k:"Association of age at menarche with adult height",t:'Żurawiecka M, Wronka I. Anthropol Anz 2022'},
+    {k:"Age at menarche in a Korean population",t:'Cho GJ 외. Eur J Pediatr 2010'},
+    {k:"Obesity and growth during childhood and puberty",t:'Marcovecchio ML, Chiarelli F. 2013'},
+    {k:"Incidence of central precocious puberty and the role of body mass",t:'Chung IH. Ann Pediatr Endocrinol Metab 2025'},
+    {k:"Secular trends of body sizes in Korean",t:'Moon JS. Korean J Pediatr 2011'},
+    {k:"A century of trends in adult human height",t:'NCD-RisC. eLife 2016'}
   ];
-  function cite(n){return '<sup><a href="#ref'+n+'">['+n+']</a></sup>'}
+  function refOf(i){var R=REFS[i];if(R.k){var r=data.filter(function(x){return x.title.indexOf(R.k)>=0})[0];if(r)return {t:r.title+' — '+r.org_or_authors+(r.year?' ('+r.year+')':''),u:r.url};}return {t:R.t,u:R.u||''};}
+  function cite(){var a=[].slice.call(arguments);return '<sup>'+a.map(function(n){return '<a href="#ref'+n+'">['+n+']</a>'}).join('')+'</sup>'}
   function EVIDENCE(){
-    return '<div class="ev"><h2>근거로 보는 성장</h2><p class="lead">잠·운동·영양·초경이 아이 성장과 어떻게 이어지는지, 무엇이 확인됐고 무엇은 아직 단정할 수 없는지 출처와 함께 정리했습니다. 키록의 기능이 어느 근거에 기대고 있는지도 함께 적었습니다.</p>'+
+    return '<div class="ev"><h2>근거로 보는 성장</h2><p class="lead">잠·운동·영양·초경이 아이 성장과 어떻게 이어지는지 연구 결과를 그대로 옮겼습니다. 연관이 있었던 연구와 없었던 연구를 함께 적었고, 키록의 기능이 어느 근거에 기대는지도 밝혔습니다.</p>'+
     '<div class="no">이 글은 건강 정보이며 진단이나 치료 안내가 아닙니다. 생활 습관으로 키가 얼마나 더 자란다고 약속할 수 있는 근거는 없습니다. 아이의 성장이 걱정되면 소아청소년과 전문의와 상담해 주세요.</div>'+
-    '<section id="t-parent"><h3>부모 키와 예측 범위</h3><p>성인 키는 상당 부분 부모에게서 이어지지만, 부모 키만으로 설명되는 몫은 한국 자료에서 30% 안팎입니다'+cite(1)+'. 그래서 한 숫자보다 범위가 정직합니다. 흔히 쓰던 (아빠 + 엄마 ± 13) ÷ 2 식은 한국 성인 키를 남 4.86cm, 여 4.81cm 낮게 봤습니다'+cite(1)+'.</p><div class="app"><b>키록에서는</b> 연구의 기울기 0.369를 쓰고 가운데는 지금 세대 18세 중앙값(남 173.6cm, 여 160.6cm)'+cite(2)+'에 맞춰, 가운데 값 위아래 8cm(10명 중 9명)를 보여 줍니다.</div><div class="more" data-topic="1"></div></section>'+
-    '<section id="t-sleep"><h3>잠</h3><p>미국수면의학회는 만 6~12세에 하루 9~12시간, 만 13~18세에 8~10시간 잠을 권합니다'+cite(4)+'. 성장호르몬은 잠든 뒤 깊은 잠 무렵에 많이 나오는 것으로 알려져 있습니다'+cite(5)+'. 다만 잠을 더 자면 키가 몇 cm 더 자란다는 것을 보여 준 연구는 없습니다.</p><div class="app"><b>키록에서는</b> 오늘 미션 ‘잠 9시간 자기’와 공식 도전 ‘잠 9시간 2주’로 잠 습관을 기록합니다. 권고 범위 안의 값으로 정했습니다.</div><div class="more" data-topic="2"></div></section>'+
-    '<section id="t-move"><h3>운동</h3><p>세계보건기구는 5~17세 어린이·청소년에게 하루 평균 60분 이상 중간 이상 강도의 활동, 그리고 일주일에 3번 이상 힘찬 활동과 뼈·근육을 튼튼하게 하는 활동을 권합니다'+cite(6)+'. 뛰고 점프하는 운동은 뼈 건강에 좋은 활동으로 꼽힙니다. 특정 운동이 키를 키운다는 근거는 확인되지 않았습니다.</p><div class="app"><b>키록에서는</b> 운동 22가지 가운데 아이가 좋아하는 것을 골라 오늘 미션에 돌아가며 넣고, 공식 도전(줄넘기 30일, 달리기 4주, 계단 오르기 2주, 스트레칭 2주, 농구 4주)으로 꾸준히 하도록 돕습니다.</div><div class="more" data-topic="3"></div></section>'+
-    '<section id="t-food"><h3>영양</h3><p>통제된 시험들을 묶어 본 분석에서는 유제품을 더 먹은 아이들이 1년에 평균 0.4cm 정도 더 자랐다는 결과가 있습니다(하루 약 245mL 더 먹은 경우)'+cite(7)+'. 연구마다 차이가 크고, 영양이 부족했던 집단에서 효과가 더 컸습니다. 이미 고르게 먹는 아이에게 같은 효과를 기대하기는 어렵습니다.</p><div class="app"><b>키록에서는</b> 오늘 미션 식습관 칸에 우유 두 컵, 단백질 반찬, 아침밥이 날마다 돌아가며 나옵니다. 우유가 맞지 않으면 치즈·요거트도 괜찮다고 안내합니다.</div><div class="more" data-topic="4"></div></section>'+
-    '<section id="t-menarche"><h3>초경과 사춘기</h3><p>딸은 초경 뒤에도 키가 자라지만 속도는 빠르게 줄어듭니다. 칠레 여아 534명을 4년 따라간 연구에서 초경 뒤 평균 6.6cm(첫 1년 3.8cm)가 더 자랐고, 초경이 11세 전이면 8.2cm, 13세 뒤면 4.4cm였습니다'+cite(3)+'. 사춘기 변화가 여아 만 8세 전, 남아 만 9세 전에 보이거나, 여아 만 13세·남아 만 14세가 지나도 없으면 상담을 권하는 것이 일반 안내입니다.</p><div class="app"><b>키록에서는</b> 딸이 초경을 했다고 넣으면 ‘지금 키 + 초경 뒤 남은 성장’을 따로 보여 주고, 성장 속도 신호등은 빨강·노랑 대신 회색 안내로 바꿉니다. 리포트 4장은 사춘기·초경 시기 일반 안내를 무료로 보여 줍니다.</div><div class="more" data-topic="5"></div></section>'+
-    '<section id="t-velocity"><h3>성장 속도</h3><p>한 번 잰 키보다 일정한 간격으로 잰 키의 변화가 더 많은 것을 알려 줍니다. 질병관리청 2017 성장도표의 가운데 곡선으로 보면 만 4~9세 아이는 1년에 대략 5.4~6.5cm 자랍니다'+cite(2)+'. 키록은 서울아산병원 성장클리닉 안내의 ‘연 4cm 이하’를 참고해, 만 4세 이후 1년 4cm 이하로 자라면 상담을 권합니다.</p><div class="app"><b>키록에서는</b> 성장 속도 신호등이 1년 환산 성장량을 같은 나이 가운데 성장량과 견주고, 석 달보다 짧은 간격은 재는 오차 때문에 계산하지 않습니다.</div></section>'+
-    '<section id="t-trend"><h3>한국 아이 키, 세대마다</h3><p>지난 100년 동안 한국 여성의 평균 키는 세계에서 가장 많이 자란 편(약 20cm)이었고, 남성도 약 15cm 자랐습니다'+cite(8)+'. 최근 세대에서는 이 증가가 거의 멈췄습니다. 그래서 예전 세대 자료로 만든 식을 그대로 쓰면 지금 아이 키를 부풀릴 수 있습니다.</p><div class="more" data-topic="7"></div></section>'+
-    '<section><h3>출처</h3><ol class="refs">'+REFS.map(function(r,i){return '<li id="ref'+(i+1)+'">'+esc(r)+'</li>'}).join('')+'</ol></section></div>';
+    '<section id="t-parent"><h3>부모 키와 예측 범위</h3><p>한국 청소년·청년 2,586명 자료에서 부모 키 합은 아들 키 변이의 27.6%, 딸의 30.6%를 설명했습니다. 흔히 쓰던 (아빠 + 엄마 ± 13) ÷ 2 식은 실제 성인 키를 남 4.86cm, 여 4.81cm 낮게 봤습니다'+cite(1)+'. 다른 나라 대가족 자료에서도 부모 키의 설명력은 36~40%였습니다'+cite(2)+'. 그래서 한 숫자보다 범위가 정직합니다.</p><div class="app"><b>키록에서는</b> 기울기 0.369는 논문에서 가져오고, 기준점은 지금 세대 18세 중앙값(남 173.6cm, 여 160.6cm)'+cite(3)+'으로 다시 맞췄습니다. 논문 원식(아들 54.255 + 0.369 × 부모 키 합, 딸 41.242 + 0.369 × 부모 키 합)을 그대로 쓰면 지금 부모 세대의 아이를 약 4cm 높게 봅니다. 범위는 가운데 값 위아래 8cm(10명 중 9명)입니다.</div><div class="more" data-topic="1"></div></section>'+
+    '<section id="t-sleep"><h3>잠</h3><p>미국소아과학회는 만 6~12세에 하루 9~12시간, 만 13~18세에 8~10시간 잠을 권합니다'+cite(5)+'. 성장호르몬은 잠든 뒤 깊은 잠(서파수면) 무렵에 많이 나오며, 성인 남성에서는 수면 중 분비의 약 70%가 깊은 잠과 겹쳤습니다'+cite(6)+'. 아동 2,527명 자료에서는 깊은 잠이 적은 아이일수록 키가 작은 경우가 많았다는 연관이 있었습니다(단면 연구라 원인은 알 수 없음)'+cite(8)+'. 반면 사춘기 아동 14명의 깊은 잠을 하룻밤 40% 줄여도 성장호르몬 분비는 달라지지 않았습니다'+cite(7)+'. 잠이 부족하면 키 성장이 떨어진다는 연구는 아직 부족하다는 정리도 있습니다'+cite(9)+'.</p><div class="app"><b>키록에서는</b> 오늘 미션 ‘잠 9시간 자기’와 공식 도전 ‘잠 9시간 2주’로 권장 범위 안의 잠 습관을 기록합니다. 키를 키운다고 말하지 않습니다.</div><div class="more" data-topic="2"></div></section>'+
+    '<section id="t-move"><h3>운동</h3><p>세계보건기구는 5~17세에게 하루 평균 60분 이상 중간 이상 강도의 활동과, 일주일에 3번 이상 힘찬 활동·뼈와 근육을 튼튼하게 하는 활동을 권합니다'+cite(10)+'. 줄넘기처럼 뛰는 운동은 아이 뼈의 무기질을 늘리는 것과 연관이 있었습니다'+cite(12)+'. 그러나 운동이 키 자체를 키운다는 것은 연구에서 보여 주지 못했고, 운동이 키 성장을 해친다는 근거도 없었습니다'+cite(11)+'. 한국 아이 대상 태권도 시험들을 묶은 분석에서도 성장호르몬·성장인자는 높았지만 키는 두 무리 사이에 의미 있는 차이가 없었습니다'+cite(13)+'.</p><div class="app"><b>키록에서는</b> 운동 22가지 가운데 아이가 좋아하는 것을 골라 오늘 미션에 돌아가며 넣고, 공식 도전(줄넘기 30일, 달리기 4주, 계단 오르기 2주, 스트레칭 2주, 농구 4주)으로 꾸준한 활동을 돕습니다.</div><div class="more" data-topic="3"></div></section>'+
+    '<section id="t-food"><h3>영양</h3><p>우유·유제품 연구는 결과가 엇갈립니다. 6~18세 2,844명을 묶은 분석에서는 키에 의미 있는 차이가 없었고 체중만 0.48kg 더 늘었습니다'+cite(14)+'. 다른 분석에서는 뼈 지표가 늘었고 키가 0.21cm 더 컸습니다'+cite(15)+'. 미국 여아 5,101명을 따라간 연구에서는 우유를 하루 3잔 넘게 마신 초경 전 여아가 1잔 미만보다 이듬해 약 0.3cm 더 자랐다는 연관이 있었습니다'+cite(16)+'. 비타민D는 몽골 학령기 아동 8,851명에게 3년 동안 줬지만 성장에는 영향이 없었습니다'+cite(17)+'.</p><div class="app"><b>키록에서는</b> 오늘 미션 식습관 칸에 우유 두 컵, 단백질 반찬, 아침밥이 날마다 돌아가며 나옵니다. 고르게 먹는 습관을 돕는 것이며, 특정 음식이 키를 키운다고 말하지 않습니다.</div><div class="more" data-topic="4"></div></section>'+
+    '<section id="t-menarche"><h3>초경과 사춘기</h3><p>딸은 초경 뒤에도 자라지만 속도가 빠르게 줄어듭니다. 칠레 여아 534명을 4년 따라간 연구에서 초경 뒤 평균 6.6cm(첫 1년 3.8cm)가 더 자랐고, 초경이 11세 전이면 8.2cm, 13세 뒤면 4.4cm였습니다'+cite(18)+'. 초경이 이른 여성일수록 성인 키가 작은 편이었다는 연관도 보고됐습니다'+cite(19)+'. 한국 여아의 초경 나이는 10년마다 약 0.68년씩 앞당겨졌습니다'+cite(20)+'. 사춘기 변화가 여아 만 8세 전, 남아 만 9세 전에 보이거나, 여아 만 13세·남아 만 14세가 지나도 없으면 상담을 권하는 것이 대학병원의 일반 안내입니다.</p><div class="app"><b>키록에서는</b> 딸이 초경을 했다고 넣으면 ‘지금 키 + 초경 뒤 남은 성장’을 따로 보여 주고, 성장 속도 신호등은 빨강·노랑 대신 회색 안내로 바꿉니다. 리포트 4장은 사춘기·초경 시기 일반 안내를 무료로 보여 줍니다.</div><div class="more" data-topic="5"></div></section>'+
+    '<section id="t-obesity"><h3>비만과 사춘기</h3><p>비만 아동은 사춘기 전에는 키가 빨리 자라지만 사춘기 성장 급등은 작은 편이고, 여아에서는 사춘기 징후가 일찍 나타난다는 근거가 분명하다는 정리가 있습니다'+cite(21)+'. 한국 자료에서도 비만이 성조숙증 발생과 연관이 있었습니다'+cite(22)+'.</p><div class="more" data-topic="6"></div></section>'+
+    '<section id="t-velocity"><h3>성장 속도</h3><p>한 번 잰 키보다 일정한 간격으로 잰 키의 변화가 더 많은 것을 알려 줍니다. 질병관리청 2017 성장도표의 가운데 곡선으로 보면 만 4~9세 아이는 1년에 대략 5.4~6.5cm 자랍니다'+cite(3)+'. 키록은 서울아산병원 성장클리닉 안내의 ‘연 4cm 이하’를 참고해, 만 4세 이후 1년 4cm 이하로 자라면 상담을 권합니다.</p><div class="app"><b>키록에서는</b> 성장 속도 신호등이 1년 환산 성장량을 같은 나이 가운데 성장량과 견주고, 석 달보다 짧은 간격은 재는 오차 때문에 계산하지 않습니다. 성장도표는 현행 2017판을 쓰며, 2027 개정판(2027년 12월 말 공표 예정)이 나오면 바꿔 반영합니다'+cite(4)+'.</div></section>'+
+    '<section id="t-trend"><h3>한국 아이 키, 세대마다</h3><p>1896~1996년생 성인 키를 견준 연구에서 한국 여성은 약 20.2cm 자라 세계에서 가장 많이 컸습니다'+cite(24)+'. 한국 성인 최종 키는 1965~1997년 남녀 모두 4.5cm 늘었지만 2005~2010년에는 차이가 없었습니다'+cite(23)+'. 그래서 예전 세대 자료로 만든 식을 그대로 쓰면 지금 아이 키를 부풀릴 수 있습니다.</p><div class="more" data-topic="7"></div></section>'+
+    '<section><h3>출처</h3><ol class="refs">'+REFS.map(function(r,i){var o=refOf(i);return '<li id="ref'+(i+1)+'">'+(o.u?'<a href="'+esc(safeUrl(o.u))+'" target="_blank" rel="noopener">'+esc(o.t)+'</a>':esc(o.t))+'</li>'}).join('')+'</ol></section></div>';
   }
   function linkCites(){
     main.querySelectorAll('.more').forEach(function(m){var re=TOPICS[+m.dataset.topic][1];var l=data.filter(function(r){return re.test(text(r))}).slice(0,5);
@@ -165,7 +186,7 @@
   if(h==='evidence')gi=5;else{var k=GROUPS.findIndex(function(g){return g.id===h});if(k>=0)gi=k;}
   draw();}
   window.addEventListener('hashchange',fromHash);fromHash();
-  fetch('../data/resources.json',{cache:'no-store'}).then(function(r){return r.ok?r.json():[]}).then(function(j){if(Array.isArray(j)){data=j.filter(function(r){return r&&r.title&&r.url});draw();}}).catch(function(){});
+  fetch('../data/resources.json',{cache:'no-store'}).then(function(r){return r.ok?r.json():[]}).then(function(j){if(Array.isArray(j)){data=j.filter(function(r){return r&&r.title&&r.url&&!/Dr ?Pyo/i.test(r.org_or_authors||'')});draw();}}).catch(function(){});
 })();
 </script>
 </body>

@@ -13,6 +13,22 @@ if dst.exists():
     shutil.rmtree(dst)
 shutil.copytree(src, dst)
 
+# Assets that lived outside the project (node_modules via junction) are exported under assets/__<absolute local path>/.
+# Move them to assets/node_modules/ and rewrite the references so no local folder name is published.
+leak_roots = [p for p in (dst / 'assets').glob('__*')]
+for lr in leak_roots:
+    nm = next((p for p in lr.rglob('node_modules') if p.is_dir()), None)
+    if nm:
+        target = dst / 'assets' / 'node_modules'
+        shutil.copytree(nm, target, dirs_exist_ok=True)
+    shutil.rmtree(lr)
+pat = re.compile(r"/assets/__[^\"'`]*?/node_modules/")
+for f in list(dst.rglob('*.js')) + list(dst.rglob('*.html')) + list(dst.rglob('*.json')):
+    s = f.read_text(encoding='utf-8', errors='surrogatepass')
+    s2 = pat.sub('/assets/node_modules/', s)
+    if s2 != s:
+        f.write_text(s2, encoding='utf-8', errors='surrogatepass')
+
 idx = dst / 'index.html'
 h = idx.read_text(encoding='utf-8')
 h = h.replace('<html lang="en">', '<html lang="ko">')

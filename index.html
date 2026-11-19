@@ -205,8 +205,8 @@
     <table class="ledger">
       <thead><tr><th>무엇을</th><th>쓰는 숫자</th><th>어디서 왔나</th></tr></thead>
       <tbody>
-        <tr><td>부모 키가 아이 키에 이어지는 정도</td><td class="v num">0.369</td><td class="s">부모 키 합이 1cm 크면 아이 성인 키는 0.369cm 큽니다(95% 신뢰구간 0.338~0.399). Kim S, Yoo JH, Chueh HW. BMJ Paediatrics Open 2024. 국민건강영양조사 2010~2019의 젊은 성인 2,586명과 그 부모.</td></tr>
-        <tr><td>가운데 기준</td><td class="v num">남 173.6cm<br>여 160.6cm</td><td class="s">질병관리청 2017 소아청소년 성장도표의 18세 중앙값. 지금 부모 세대 평균 키 합 334.2cm(173.6 + 160.6)를 기준점으로 둡니다.</td></tr>
+        <tr><td>부모 키가 아이 키에 이어지는 정도</td><td class="v num">0.369</td><td class="s">부모 키 합이 1cm 크면 아이 성인 키는 0.369cm 큽니다(95% 신뢰구간 0.338~0.399). Kim S, Yoo JH, Chueh HW. BMJ Paediatrics Open 2024. 국민건강영양조사 2010~2019의 젊은 성인 2,586명과 그 부모. <b>키록은 이 기울기만 논문에서 가져옵니다.</b></td></tr>
+        <tr><td>가운데 기준</td><td class="v num">남 173.6cm<br>여 160.6cm</td><td class="s"><b>기준점은 지금 세대로 다시 맞췄습니다.</b> 논문 원식(아들 54.255 + 0.369 × 부모 키 합, 딸 41.242 + 0.369 × 부모 키 합)은 1950~60년대생 부모 자료라 지금 부모 세대의 아이를 약 4cm 높게 봅니다. 그래서 질병관리청 2017 소아청소년 성장도표의 18세 중앙값을 가운데로, 지금 부모 세대 평균 키 합 334.2cm(173.6 + 160.6)를 기준점으로 둡니다.</td></tr>
         <tr><td>예측 범위</td><td class="v num">가운데 값 ±8cm</td><td class="s">원 연구의 평균 오차(평균제곱오차 23.8, 약 4.9cm)로 계산한 90% 범위. 10명 중 9명이 들어가는 폭입니다.</td></tr>
         <tr><td>지금 키 위치</td><td class="v num">개월마다</td><td class="s">질병관리청 2017 성장도표의 개월별 키 분포(LMS 방법, Cole·Green 1992)로 같은 나이·성별 안의 위치를 구하고, 그 위치를 18세까지 이었을 때의 키를 나란히 보여 줍니다(만 3세~18세 전).</td></tr>
         <tr><td>딸의 초경 뒤 남은 성장</td><td class="v num">평균 6.6cm</td><td class="s">초경 뒤 4년 동안 평균 6.6cm, 그중 첫 1년 3.8cm. 초경이 11세 전이면 8.2cm, 13세 뒤면 4.4cm. Gaete 외, Hormone Research in Paediatrics 2025(칠레 여아 534명).</td></tr>
@@ -214,6 +214,7 @@
       </tbody>
     </table>
 
+    <p class="care" style="margin-top:14px;border-left-color:var(--green)">키록은 현행 질병관리청 2017 소아청소년 성장도표를 쓰며, 2027 개정판(2027년 12월 말 공표 예정)이 나오면 바꿔 반영합니다. <a href="https://www.kdca.go.kr/bbs/kdca/42/313000/artclView.do?layout=unknown" target="_blank" rel="noopener">질병관리청 안내</a></p>
     <div class="notes">
       <div><h3>왜 '정확도 몇 %'라고 하지 않나요</h3><p>무엇을 맞혔다는 건지 정할 수 없는 숫자는 쓰지 않습니다. 대신 '10명 중 9명이 들어가는 범위'처럼 확인할 수 있는 말로 보여 드립니다. 부모 키가 설명하는 몫은 30% 안팎이고, 나머지는 아이마다 다릅니다.</p></div>
       <div><h3>왜 예전 공식을 그대로 쓰지 않나요</h3><p>흔히 쓰는 (아빠 + 엄마 ± 13) ÷ 2 식은 한국 성인 키를 남 4.86cm, 여 4.81cm 낮게 봤습니다. 반대로 한국 연구식을 그대로 쓰면 지금 부모 세대에서는 약 4cm 높게 나옵니다. 그래서 기울기만 연구에서 가져오고 가운데는 지금 세대에 맞췄습니다.</p></div>
@@ -400,7 +401,7 @@
   var gEl=document.getElementById('libgrid');
   function drawLib(list){
     gEl.innerHTML=groups.map(function(g,i){
-      var c=list?list.filter(function(r){return (r.group||'').indexOf(g[0].slice(0,2))===0||(i===3&&/연구|논문/.test(r.group||''))}).length:0;
+      var T=['기관자료','병원정보','유튜브','논문'][i];var c=list?list.filter(function(r){return r.type===T&&!/Dr ?Pyo/i.test(r.org_or_authors||'')}).length:0;
       return '<a href="library/#g'+i+'" style="border-color:rgba(255,255,255,.25);color:#fff"><b style="color:#fff">'+g[0]+'</b><span style="color:#D5E3DB">'+g[1]+'</span>'+(c?'<em style="color:#FFC9B6">자료 '+c+'건</em>':'')+'</a>';
     }).join('');
   }
