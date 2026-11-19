@@ -93,7 +93,7 @@
   ];
   var TOPICS=[
     ['전체',null],
-    ['부모 키 예측',/부모 ?키|예측|유전|target height|mid-?parental|predict/i],
+    ['부모 키 예측',/부모 ?키로|중간부모키|target height|mid-?parental|Khamis|adult stature/i],
     ['잠',/잠|수면|sleep/i],
     ['운동',/운동|신체 ?활동|physical activity|exercise|줄넘기|스포츠/i],
     ['영양',/영양|우유|단백질|식사|식습관|비타민|nutrition|dairy|milk|diet/i],
@@ -179,7 +179,7 @@
     '<section><h3>출처</h3><ol class="refs">'+REFS.map(function(r,i){var o=refOf(i);return '<li id="ref'+(i+1)+'">'+(o.u?'<a href="'+esc(safeUrl(o.u))+'" target="_blank" rel="noopener">'+esc(o.t)+'</a>':esc(o.t))+'</li>'}).join('')+'</ol></section></div>';
   }
   function linkCites(){
-    main.querySelectorAll('.more').forEach(function(m){var re=TOPICS[+m.dataset.topic][1];var l=data.filter(function(r){return re.test(text(r))}).slice(0,5);
+    main.querySelectorAll('.more').forEach(function(m){var re=TOPICS[+m.dataset.topic][1];var l=data.filter(function(r){return re.test(text(r))});l=l.filter(function(r){return r.type==='논문'}).concat(l.filter(function(r){return r.type!=='논문'})).slice(0,5);
       if(l.length)m.innerHTML='<b>자료실의 같은 주제 자료</b><ul style="margin:6px 0 0;padding-left:20px">'+l.map(function(r){return '<li><a href="'+esc(safeUrl(r.url))+'" target="_blank" rel="noopener">'+esc(r.title)+'</a> <span style="color:var(--faint)">'+esc(r.org_or_authors)+(r.year?' '+esc(r.year):'')+'</span></li>'}).join('')+'</ul>';});
   }
   function fromHash(){var h=(location.hash||'').slice(1);
