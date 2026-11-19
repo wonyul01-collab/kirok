@@ -1,0 +1,172 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>키록 성장 자료실</title>
+<meta name="description" content="질병관리청·학회 자료, 대학병원 건강정보, 소아청소년과 전문의 채널, 잠·운동·영양·초경과 성장에 관한 연구를 근거 수준과 핵심 숫자로 정리했습니다.">
+<meta property="og:title" content="키록 성장 자료실 — 기관 자료와 연구를 한곳에">
+<meta property="og:description" content="잠·운동·영양·초경과 아이 성장, 무엇이 확인됐고 무엇이 아직인지 출처와 함께 봅니다.">
+<meta property="og:image" content="https://wonyul01-collab.github.io/kirok/og.jpg">
+<meta property="og:url" content="https://wonyul01-collab.github.io/kirok/library/">
+<link rel="icon" href="../assets/favicon.png">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+<link rel="stylesheet" href="../assets/site.css">
+<style>
+.lib{display:grid;grid-template-columns:250px minmax(0,1fr);max-width:1400px;margin:0 auto;min-height:calc(100vh - 62px)}
+.groups{border-right:1px solid var(--line);padding:18px 0}
+.groups h1{font-size:22px;padding:0 18px 4px}
+.groups p{font-size:14px;color:var(--sub);padding:0 18px 10px;margin:0}
+.groups button{display:flex;justify-content:space-between;width:100%;text-align:left;border:0;border-left:4px solid transparent;background:none;padding:11px 18px;font:inherit;font-size:16px;cursor:pointer;color:var(--ink)}
+.groups button span{color:var(--faint);font-size:14px;font-variant-numeric:tabular-nums}
+.groups button[aria-selected=true]{border-left-color:var(--green);background:var(--white);font-weight:800;color:var(--green-deep)}
+.groups hr{border:0;border-top:1px solid var(--line);margin:8px 18px}
+.body{min-width:0}
+.topics{display:flex;gap:2px;flex-wrap:wrap;border-bottom:1.5px solid var(--ink);padding:14px 22px 0;background:var(--paper);position:sticky;top:62px;z-index:5}
+.topics button{border:1px solid var(--line);border-bottom:0;background:#EFECE4;padding:8px 13px;font:inherit;font-size:15.5px;cursor:pointer;border-radius:6px 6px 0 0;color:var(--ink)}
+.topics button[aria-pressed=true]{background:var(--green);border-color:var(--green);color:#fff;font-weight:700}
+.now{padding:12px 22px;border-bottom:1px solid var(--line);background:var(--white);font-size:16px}
+.list{padding:6px 22px 100px}
+.item{display:grid;grid-template-columns:minmax(0,1fr) 190px;gap:18px;padding:18px 0;border-bottom:1px solid var(--line)}
+.item h3{font-size:18px;line-height:1.45}
+.item h3 a{color:var(--ink);text-decoration-color:var(--line2)}
+.item h3 a:hover{color:var(--green)}
+.item .who{font-size:15px;color:var(--sub);margin:4px 0 6px}
+.item .sum{font-size:16px;margin:0}
+.item .key{margin-top:8px;font-size:15.5px;border-left:3px solid var(--pencil);padding-left:10px}
+.item .side{font-size:14px;color:var(--sub)}
+.item .side div{margin-bottom:6px}
+.item .side b{display:block;color:var(--ink);font-size:15px}
+.lvl{display:inline-block;font-weight:800;color:var(--green-deep)}
+.empty{padding:40px 0;color:var(--sub);font-size:17px}
+.legend{margin-top:22px;font-size:15px;color:var(--sub);border-top:1.5px solid var(--ink);padding-top:14px}
+.legend table{border-collapse:collapse;width:100%;background:#fff}
+.legend td,.legend th{border-bottom:1px solid var(--line);padding:8px 10px;text-align:left}
+/* 근거로 보는 성장 */
+.ev{padding:22px 22px 100px;max-width:900px}
+.ev h2{font-size:28px;margin-bottom:8px}
+.ev .lead{font-size:17px;color:var(--sub)}
+.ev section{border-top:1.5px solid var(--ink);margin-top:28px;padding-top:16px}
+.ev h3{font-size:22px;margin-bottom:10px}
+.ev p{font-size:16.5px}
+.ev .app{background:var(--green-soft);border-left:4px solid var(--green);padding:12px 16px;font-size:16px;margin:12px 0}
+.ev .app b{color:var(--green-deep)}
+.ev .no{background:var(--white);border-left:4px solid var(--pencil);padding:10px 14px;font-size:15.5px;margin:12px 0}
+.ev sup a{font-weight:800;text-decoration:none;font-size:13px;padding:0 1px}
+.ev ol.refs{font-size:15px;color:var(--sub);padding-left:22px}
+.ev ol.refs li{margin:6px 0}
+.ev .more{font-size:15px;margin-top:6px}
+@media (max-width:900px){
+  .lib{display:block}
+  .groups{display:flex;overflow-x:auto;gap:2px;border-right:0;border-bottom:1px solid var(--line);padding:8px}
+  .groups h1,.groups p,.groups hr{display:none}
+  .groups button{flex:none;width:auto;border-left:0;border-bottom:4px solid transparent;padding:10px 12px;gap:6px}
+  .groups button[aria-selected=true]{border-bottom-color:var(--green)}
+  .topics{position:static;padding:10px 16px 0}
+  .now{padding:12px 16px}
+  .list{padding:4px 16px 100px}
+  .item{grid-template-columns:1fr;gap:6px}
+  .ev{padding:18px 16px 100px}
+}
+</style>
+</head>
+<body data-root="../" data-page="library">
+<a class="skip" href="#main">본문으로 건너뛰기</a>
+<header id="top"></header>
+<div class="lib">
+  <nav class="groups" id="groups" aria-label="자료 묶음"><h1>성장 자료실</h1><p>모든 자료는 원문 주소로 연결됩니다.</p></nav>
+  <main class="body" id="main"></main>
+</div>
+<footer id="foot"></footer>
+<script src="../site.config.js"></script>
+<script src="../assets/faq.js"></script>
+<script src="../assets/common.js"></script>
+<script>
+(function(){
+  var GROUPS=[
+    {id:'g0',name:'공공기관·학회',match:function(r){return r.type==='기관자료'||/기관|학회|정부|공공/.test(r.group||'')}},
+    {id:'g1',name:'대학병원 정보',match:function(r){return r.type==='병원정보'||/병원/.test(r.group||'')}},
+    {id:'g2',name:'유튜브 전문 채널',match:function(r){return r.type==='유튜브'||/유튜브|채널/.test(r.group||'')}},
+    {id:'g3',name:'주제별 연구',match:function(r){return r.type==='논문'||/연구|논문/.test(r.group||'')}},
+    {id:'g4',name:'부모용 읽을거리',match:function(r){return r.type==='읽을거리'||/읽을거리|부모용/.test(r.group||'')}}
+  ];
+  var TOPICS=[
+    ['전체',null],
+    ['부모 키 예측',/부모 ?키|예측|유전|target height|mid-?parental|predict/i],
+    ['잠',/잠|수면|sleep/i],
+    ['운동',/운동|신체 ?활동|physical activity|exercise|줄넘기|스포츠/i],
+    ['영양',/영양|우유|단백질|식사|식습관|비타민|nutrition|dairy|milk|diet/i],
+    ['초경과 사춘기',/초경|사춘기|성조숙|menarche|pubert/i],
+    ['비만',/비만|체중|obes|bmi/i],
+    ['한국 아이 키 추세',/추세|세대|trend|secular|국민건강영양조사|knhanes|100년|century/i]
+  ];
+  var data=[], gi=0, ti=0;
+  var main=document.getElementById('main'), gnav=document.getElementById('groups');
+  function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})}
+  function safeUrl(u){u=String(u||'');return /^https?:\/\//i.test(u)?u:'#'}
+  function text(r){return [r.group,r.title,r.summary_ko,r.key_number,r.org_or_authors].join(' ')}
+  function navDraw(){
+    gnav.querySelectorAll('button,hr').forEach(function(x){x.remove()});
+    GROUPS.forEach(function(g,i){var b=document.createElement('button');b.setAttribute('aria-selected',gi===i);var n=data.filter(g.match).length;b.innerHTML=g.name+'<span>'+(n||'')+'</span>';b.onclick=function(){gi=i;ti=0;draw();history.replaceState(null,'','#'+g.id)};gnav.appendChild(b);});
+    gnav.appendChild(document.createElement('hr'));
+    var b=document.createElement('button');b.setAttribute('aria-selected',gi===5);b.innerHTML='근거로 보는 성장<span></span>';b.onclick=function(){gi=5;draw();history.replaceState(null,'','#evidence')};gnav.appendChild(b);
+  }
+  function itemHtml(r,i){
+    var isPaper=r.type==='논문', isYt=r.type==='유튜브';
+    return '<article class="item" id="r'+i+'"><div><h3><a href="'+esc(safeUrl(r.url))+'" target="_blank" rel="noopener">'+esc(r.title)+'</a></h3>'+
+      '<div class="who">'+esc(r.org_or_authors)+(r.year?' ('+esc(r.year)+')':'')+(isYt?' · 유튜브':'')+'</div>'+
+      '<p class="sum">'+esc(r.summary_ko)+'</p>'+(r.key_number?'<div class="key"><b>핵심 숫자</b> '+esc(r.key_number)+'</div>':'')+'</div>'+
+      '<div class="side">'+(r.type?'<div><b>종류</b>'+esc(r.type)+'</div>':'')+(r.evidence_level?'<div><b>근거 수준</b><span class="lvl">'+esc(r.evidence_level)+'</span></div>':'')+(r.audience?'<div><b>누구에게</b>'+esc(r.audience)+'</div>':'')+(r.checked?'<div><b>확인한 날</b>'+esc(r.checked)+'</div>':'')+'</div></article>';
+  }
+  function draw(){
+    navDraw();
+    if(gi===5){main.innerHTML=EVIDENCE();linkCites();return;}
+    var g=GROUPS[gi];
+    var html='<div class="topics" role="group" aria-label="주제">'+TOPICS.map(function(t,i){return '<button type="button" aria-pressed="'+(i===ti)+'" data-i="'+i+'">'+t[0]+'</button>'}).join('')+'</div>';
+    var list=data.filter(g.match).filter(function(r){return !TOPICS[ti][1]||TOPICS[ti][1].test(text(r))});
+    html+='<div class="now"><b>'+g.name+'</b> '+(ti?'· '+TOPICS[ti][0]+' ':'')+'자료 '+list.length+'건</div><div class="list">';
+    if(!data.length) html+='<p class="empty">자료를 정리해 올리는 중입니다. 그동안 <a href="#evidence" onclick="return false" id="toev">근거로 보는 성장</a>을 먼저 읽어 보세요.</p>';
+    else if(!list.length) html+='<p class="empty">이 주제의 자료는 아직 없어요. 다른 주제나 묶음을 골라 보세요.</p>';
+    else html+=list.map(function(r){return itemHtml(r,data.indexOf(r))}).join('');
+    html+='<div class="legend"><b style="color:var(--ink)">근거 수준 읽는 법</b><table><tr><th>여러 연구를 묶어 본 것</th><td>체계적 고찰·메타분석. 가장 믿을 만한 편</td></tr><tr><th>무작위 비교 시험</th><td>두 무리로 나눠 비교한 실험</td></tr><tr><th>관찰 연구</th><td>있는 그대로 따라가며 본 것. 원인이라고 단정하기 어려움</td></tr><tr><th>기관 권고·전문가 의견</th><td>기관이나 학회가 정리한 권고</td></tr></table><p style="margin-top:10px">자료실은 정보를 찾아보기 쉽게 모은 것이며, 의료 판단은 소아청소년과 전문의와 상담해 주세요.</p></div></div>';
+    main.innerHTML=html;
+    main.querySelectorAll('.topics button').forEach(function(b){b.onclick=function(){ti=+b.dataset.i;draw()}});
+    var te=document.getElementById('toev'); if(te)te.onclick=function(){gi=5;draw();return false};
+  }
+  /* 근거로 보는 성장: 고정 출처 [1]~[8] + 자료실 같은 주제 자료 */
+  var REFS=[
+    'Kim S, Yoo JH, Chueh HW. Tanner’s target height formula underestimates final adult height in Korean adolescents and young adults. BMJ Paediatrics Open 2024;8:e002653.',
+    '질병관리청·대한소아청소년과학회. 2017 소아청소년 성장도표.',
+    'Gaete X 외. Hormone Research in Paediatrics 2025;98(1):66-74. 칠레 여아 534명, 초경 뒤 4년 추적.',
+    'Paruthi S 외. Recommended amount of sleep for pediatric populations: a consensus statement of the American Academy of Sleep Medicine. Journal of Clinical Sleep Medicine 2016;12(6):785-786.',
+    'Van Cauter E, Plat L. Physiology of growth hormone secretion during sleep. Journal of Pediatrics 1996;128(5 Pt 2):S32-37.',
+    'World Health Organization. WHO guidelines on physical activity and sedentary behaviour. 2020.',
+    'de Beer H. Dairy products and physical stature: a systematic review and meta-analysis of controlled trials. Economics & Human Biology 2012;10(3):299-309.',
+    'NCD Risk Factor Collaboration. A century of trends in adult human height. eLife 2016;5:e13410.'
+  ];
+  function cite(n){return '<sup><a href="#ref'+n+'">['+n+']</a></sup>'}
+  function EVIDENCE(){
+    return '<div class="ev"><h2>근거로 보는 성장</h2><p class="lead">잠·운동·영양·초경이 아이 성장과 어떻게 이어지는지, 무엇이 확인됐고 무엇은 아직 단정할 수 없는지 출처와 함께 정리했습니다. 키록의 기능이 어느 근거에 기대고 있는지도 함께 적었습니다.</p>'+
+    '<div class="no">이 글은 건강 정보이며 진단이나 치료 안내가 아닙니다. 생활 습관으로 키가 얼마나 더 자란다고 약속할 수 있는 근거는 없습니다. 아이의 성장이 걱정되면 소아청소년과 전문의와 상담해 주세요.</div>'+
+    '<section id="t-parent"><h3>부모 키와 예측 범위</h3><p>성인 키는 상당 부분 부모에게서 이어지지만, 부모 키만으로 설명되는 몫은 한국 자료에서 30% 안팎입니다'+cite(1)+'. 그래서 한 숫자보다 범위가 정직합니다. 흔히 쓰던 (아빠 + 엄마 ± 13) ÷ 2 식은 한국 성인 키를 남 4.86cm, 여 4.81cm 낮게 봤습니다'+cite(1)+'.</p><div class="app"><b>키록에서는</b> 연구의 기울기 0.369를 쓰고 가운데는 지금 세대 18세 중앙값(남 173.6cm, 여 160.6cm)'+cite(2)+'에 맞춰, 가운데 값 위아래 8cm(10명 중 9명)를 보여 줍니다.</div><div class="more" data-topic="1"></div></section>'+
+    '<section id="t-sleep"><h3>잠</h3><p>미국수면의학회는 만 6~12세에 하루 9~12시간, 만 13~18세에 8~10시간 잠을 권합니다'+cite(4)+'. 성장호르몬은 잠든 뒤 깊은 잠 무렵에 많이 나오는 것으로 알려져 있습니다'+cite(5)+'. 다만 잠을 더 자면 키가 몇 cm 더 자란다는 것을 보여 준 연구는 없습니다.</p><div class="app"><b>키록에서는</b> 오늘 미션 ‘잠 9시간 자기’와 공식 도전 ‘잠 9시간 2주’로 잠 습관을 기록합니다. 권고 범위 안의 값으로 정했습니다.</div><div class="more" data-topic="2"></div></section>'+
+    '<section id="t-move"><h3>운동</h3><p>세계보건기구는 5~17세 어린이·청소년에게 하루 평균 60분 이상 중간 이상 강도의 활동, 그리고 일주일에 3번 이상 힘찬 활동과 뼈·근육을 튼튼하게 하는 활동을 권합니다'+cite(6)+'. 뛰고 점프하는 운동은 뼈 건강에 좋은 활동으로 꼽힙니다. 특정 운동이 키를 키운다는 근거는 확인되지 않았습니다.</p><div class="app"><b>키록에서는</b> 운동 22가지 가운데 아이가 좋아하는 것을 골라 오늘 미션에 돌아가며 넣고, 공식 도전(줄넘기 30일, 달리기 4주, 계단 오르기 2주, 스트레칭 2주, 농구 4주)으로 꾸준히 하도록 돕습니다.</div><div class="more" data-topic="3"></div></section>'+
+    '<section id="t-food"><h3>영양</h3><p>통제된 시험들을 묶어 본 분석에서는 유제품을 더 먹은 아이들이 1년에 평균 0.4cm 정도 더 자랐다는 결과가 있습니다(하루 약 245mL 더 먹은 경우)'+cite(7)+'. 연구마다 차이가 크고, 영양이 부족했던 집단에서 효과가 더 컸습니다. 이미 고르게 먹는 아이에게 같은 효과를 기대하기는 어렵습니다.</p><div class="app"><b>키록에서는</b> 오늘 미션 식습관 칸에 우유 두 컵, 단백질 반찬, 아침밥이 날마다 돌아가며 나옵니다. 우유가 맞지 않으면 치즈·요거트도 괜찮다고 안내합니다.</div><div class="more" data-topic="4"></div></section>'+
+    '<section id="t-menarche"><h3>초경과 사춘기</h3><p>딸은 초경 뒤에도 키가 자라지만 속도는 빠르게 줄어듭니다. 칠레 여아 534명을 4년 따라간 연구에서 초경 뒤 평균 6.6cm(첫 1년 3.8cm)가 더 자랐고, 초경이 11세 전이면 8.2cm, 13세 뒤면 4.4cm였습니다'+cite(3)+'. 사춘기 변화가 여아 만 8세 전, 남아 만 9세 전에 보이거나, 여아 만 13세·남아 만 14세가 지나도 없으면 상담을 권하는 것이 일반 안내입니다.</p><div class="app"><b>키록에서는</b> 딸이 초경을 했다고 넣으면 ‘지금 키 + 초경 뒤 남은 성장’을 따로 보여 주고, 성장 속도 신호등은 빨강·노랑 대신 회색 안내로 바꿉니다. 리포트 4장은 사춘기·초경 시기 일반 안내를 무료로 보여 줍니다.</div><div class="more" data-topic="5"></div></section>'+
+    '<section id="t-velocity"><h3>성장 속도</h3><p>한 번 잰 키보다 일정한 간격으로 잰 키의 변화가 더 많은 것을 알려 줍니다. 질병관리청 2017 성장도표의 가운데 곡선으로 보면 만 4~9세 아이는 1년에 대략 5.4~6.5cm 자랍니다'+cite(2)+'. 만 4세 이후 1년 4cm 이하로 자라면 상담을 권하는 것이 대학병원 안내의 일반 기준입니다.</p><div class="app"><b>키록에서는</b> 성장 속도 신호등이 1년 환산 성장량을 같은 나이 가운데 성장량과 견주고, 석 달보다 짧은 간격은 재는 오차 때문에 계산하지 않습니다.</div></section>'+
+    '<section id="t-trend"><h3>한국 아이 키, 세대마다</h3><p>지난 100년 동안 한국 여성의 평균 키는 세계에서 가장 많이 자란 편(약 20cm)이었고, 남성도 약 15cm 자랐습니다'+cite(8)+'. 최근 세대에서는 이 증가가 거의 멈췄습니다. 그래서 예전 세대 자료로 만든 식을 그대로 쓰면 지금 아이 키를 부풀릴 수 있습니다.</p><div class="more" data-topic="7"></div></section>'+
+    '<section><h3>출처</h3><ol class="refs">'+REFS.map(function(r,i){return '<li id="ref'+(i+1)+'">'+esc(r)+'</li>'}).join('')+'</ol></section></div>';
+  }
+  function linkCites(){
+    main.querySelectorAll('.more').forEach(function(m){var re=TOPICS[+m.dataset.topic][1];var l=data.filter(function(r){return re.test(text(r))}).slice(0,5);
+      if(l.length)m.innerHTML='<b>자료실의 같은 주제 자료</b><ul style="margin:6px 0 0;padding-left:20px">'+l.map(function(r){return '<li><a href="'+esc(safeUrl(r.url))+'" target="_blank" rel="noopener">'+esc(r.title)+'</a> <span style="color:var(--faint)">'+esc(r.org_or_authors)+(r.year?' '+esc(r.year):'')+'</span></li>'}).join('')+'</ul>';});
+  }
+  function fromHash(){var h=(location.hash||'').slice(1);
+  if(h==='evidence')gi=5;else{var k=GROUPS.findIndex(function(g){return g.id===h});if(k>=0)gi=k;}
+  draw();}
+  window.addEventListener('hashchange',fromHash);fromHash();
+  fetch('../data/resources.json',{cache:'no-store'}).then(function(r){return r.ok?r.json():[]}).then(function(j){if(Array.isArray(j)){data=j.filter(function(r){return r&&r.title&&r.url});draw();}}).catch(function(){});
+})();
+</script>
+</body>
+</html>

@@ -1,3 +1,412 @@
-<!doctype html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>키록</title>
-<style>body{font-family:system-ui,sans-serif;max-width:640px;margin:40px auto;padding:0 16px;color:#222;background:#fff;line-height:1.7}h1{font-size:40px;color:#2f7d5b;margin:0}a{color:#2f7d5b}</style></head>
-<body><h1>키록</h1><p>우리 아이 키 기록·예상 성인 키 범위 앱 (운영: 꿈의 색깔)</p><p><a href="privacy/">개인정보 처리방침</a></p></body></html>
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>키록 · 아이 키 기록과 예상 성인 키 범위</title>
+<meta name="description" content="부모 키와 아이의 기록으로 예상 성인 키를 범위로 보여 주는 앱. 한국 부모·자녀 연구와 질병관리청 성장도표로 계산하고, 결과는 무료입니다.">
+<meta property="og:type" content="website">
+<meta property="og:title" content="키록 — 문틀에 긋던 키, 숫자로 남기기">
+<meta property="og:description" content="부모 키와 아이 기록으로 예상 성인 키를 범위로 보여 드려요. 계산 근거를 모두 공개하고, 결과는 무료입니다.">
+<meta property="og:image" content="https://wonyul01-collab.github.io/kirok/og.jpg">
+<meta property="og:image:width" content="1200"><meta property="og:image:height" content="630">
+<meta property="og:url" content="https://wonyul01-collab.github.io/kirok/">
+<link rel="icon" href="assets/favicon.png">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+<link rel="stylesheet" href="assets/site.css">
+<style>
+/* 첫 화면 */
+.hero{padding:44px 0 0}
+.hero .grid{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,.95fr);gap:40px;align-items:end}
+.hero h1{font-size:clamp(34px,5.2vw,58px);font-weight:800;letter-spacing:-0.035em;line-height:1.18}
+.hero .lead{font-size:19px;color:var(--sub);margin:22px 0 26px;max-width:34em}
+.hero .acts{display:flex;flex-wrap:wrap;gap:10px}
+.hero .state{margin-top:18px;font-size:15px;color:var(--sub)}
+.hero .state b{color:var(--green)}
+.phones{position:relative;display:flex;justify-content:center;gap:18px;align-items:flex-end}
+.shot{border:1.5px solid var(--ink);border-radius:22px;overflow:hidden;background:#fff;box-shadow:0 22px 40px -24px rgba(23,63,49,.45)}
+.phones .shot{width:46%}
+.phones .shot.back{transform:translateY(-36px)}
+.doorphoto{position:relative;margin-top:40px}
+.doorphoto img{width:100%;height:clamp(200px,30vw,420px);object-fit:cover;object-position:50% 60%}
+.doorphoto figcaption{position:absolute;left:0;bottom:0;background:var(--paper);padding:10px 18px 0 20px;font-size:15px;color:var(--sub);max-width:min(560px,90%)}
+@media (max-width:860px){
+  .pc-only{display:none}
+  .doorphoto figcaption{position:static;max-width:none;padding:10px 16px 0}
+  .hero .grid{grid-template-columns:1fr;gap:28px}
+  .phones .shot.back{transform:none}
+}
+
+/* 구역 공통 */
+.sec{padding:72px 0}
+.sec h2{font-size:clamp(28px,3.6vw,40px);font-weight:800}
+.sec .intro{font-size:18px;color:var(--sub);max-width:40em;margin:14px 0 0}
+.two{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:48px;align-items:start}
+@media (max-width:860px){.two{grid-template-columns:1fr;gap:28px}.sec{padding:52px 0}}
+
+/* 문틀 계산기 */
+.calc{display:grid;grid-template-columns:minmax(0,1fr) 260px;gap:28px;margin-top:34px;background:var(--white);border:1.5px solid var(--ink);border-radius:12px;padding:26px}
+.calc .row{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:14px}
+.calc label{display:block;font-size:15px;color:var(--sub);margin-bottom:6px}
+.calc .f{flex:1;min-width:130px}
+.calc input[type=number]{width:100%;height:52px;border:1.5px solid var(--line2);border-radius:8px;padding:0 44px 0 14px;font:inherit;font-size:20px;font-weight:700;background:#fff}
+.calc input:focus{border-color:var(--green);outline:none}
+.unit{position:relative}.unit::after{content:"cm";position:absolute;right:14px;top:14px;color:var(--sub);font-size:16px}
+.seg{display:flex;border:1.5px solid var(--line2);border-radius:8px;overflow:hidden;height:52px}
+.seg button{flex:1;border:0;background:#fff;font:inherit;font-size:17px;cursor:pointer;color:var(--ink)}
+.seg button[aria-pressed=true]{background:var(--green);color:#fff;font-weight:700}
+.out{margin-top:6px;border-top:1px solid var(--line);padding-top:16px}
+.out .big{font-size:clamp(34px,4.6vw,48px);font-weight:800;letter-spacing:-0.03em}
+.out .big small{font-size:20px;font-weight:700;margin-left:4px}
+.out .mid{font-size:18px}
+.out .how{font-size:15px;color:var(--sub);margin-top:10px}
+.out .err{color:var(--warn);font-weight:700}
+.frame-svg{width:100%;height:auto}
+@media (max-width:760px){.calc{grid-template-columns:1fr;padding:18px}.frame-wrap{max-width:260px;margin:0 auto}}
+
+/* 근거 표 */
+.ledger{width:100%;border-collapse:collapse;margin-top:30px;font-size:15px;background:var(--white)}
+.ledger th,.ledger td{text-align:left;vertical-align:top;padding:14px 14px;border-bottom:1px solid var(--line)}
+.ledger thead th{background:var(--green-deep);color:#fff;font-size:15px;font-weight:700}
+.ledger td:first-child{font-weight:700;width:22%}
+.ledger td.v{font-size:17px;font-weight:800;color:var(--green-deep);width:24%}
+.ledger td.s{color:var(--sub)}
+@media (max-width:760px){
+  .ledger thead{display:none}
+  .ledger,.ledger tbody,.ledger tr,.ledger td{display:block;width:100%!important}
+  .ledger tr{border-bottom:1.5px solid var(--line2);padding:10px 0}
+  .ledger td{border:0;padding:4px 14px}
+}
+.notes{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:0;margin-top:34px;border-top:1.5px solid var(--ink)}
+.notes div{padding:18px 20px 6px 0}
+.notes div+div{padding-left:20px;border-left:1px solid var(--line)}
+.notes h3{font-size:19px;margin-bottom:8px}
+.notes p{font-size:15.5px;color:var(--sub)}
+@media (max-width:860px){.notes{grid-template-columns:1fr}.notes div+div{padding-left:0;border-left:0;border-top:1px solid var(--line)}}
+
+/* 흐름 */
+.flow{margin-top:36px;display:grid;gap:56px}
+.step{display:grid;grid-template-columns:72px minmax(0,1fr) minmax(0,300px);gap:28px;align-items:start}
+.step .n{font-size:15px;font-weight:800;color:var(--green);border-top:3px solid var(--green);padding-top:8px}
+.step h3{font-size:24px;margin-bottom:10px}
+.step p{font-size:16.5px;color:var(--sub)}
+.step ul{margin:8px 0 0;padding-left:20px;color:var(--ink)}
+.step li{margin:4px 0}
+.step .shot{border-radius:18px}
+@media (max-width:860px){.step{grid-template-columns:1fr;gap:14px}.step .shot{max-width:300px}}
+
+/* 신호등 */
+.lights{display:flex;flex-direction:column;gap:0;margin-top:24px;border:1.5px solid var(--ink);border-radius:12px;overflow:hidden;background:var(--white)}
+.light{display:grid;grid-template-columns:96px minmax(0,1fr);gap:16px;padding:16px 18px;border-top:1px solid var(--line);align-items:center}
+.light:first-child{border-top:0}
+.lamp{display:flex;gap:6px;background:#1B1F24;border-radius:10px;padding:7px 9px;width:max-content}
+.lamp i{width:16px;height:16px;border-radius:50%;background:#3a3f45;display:block}
+.lamp.g i:nth-child(3){background:#2F9E6E}.lamp.y i:nth-child(2){background:#D9A514}.lamp.r i:nth-child(1){background:#D9452B}
+.lamp.n i{background:#3a3f45}
+.light b{display:block;font-size:17px}
+.light span{font-size:15px;color:var(--sub)}
+.bars{margin-top:22px}
+.bars svg{width:100%;height:auto;display:block}
+
+/* 자료실 진입 */
+.lib-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));margin-top:30px;border-top:1.5px solid var(--ink)}
+.lib-grid a{display:block;padding:18px 18px 22px 0;text-decoration:none;color:var(--ink);border-bottom:1px solid var(--line)}
+.lib-grid a+a{padding-left:18px;border-left:1px solid var(--line)}
+.lib-grid b{display:block;font-size:19px;margin-bottom:6px;color:var(--green-deep)}
+.lib-grid span{font-size:15px;color:var(--sub)}
+.lib-grid em{font-style:normal;font-size:15px;font-weight:700;color:var(--pencil);display:block;margin-top:10px}
+.lib-grid a:hover b{text-decoration:underline}
+@media (max-width:860px){.lib-grid{grid-template-columns:1fr 1fr}.lib-grid a:nth-child(3){border-left:0;padding-left:0}}
+@media (max-width:520px){.lib-grid{grid-template-columns:1fr}.lib-grid a+a{border-left:0;padding-left:0}}
+
+/* 개인정보 */
+.privacy-list{margin:26px 0 0;padding:0;list-style:none;border-top:1.5px solid var(--ink)}
+.privacy-list li{display:grid;grid-template-columns:200px minmax(0,1fr);gap:18px;padding:16px 0;border-bottom:1px solid var(--line);font-size:16px}
+.privacy-list li b{color:var(--green-deep)}
+@media (max-width:640px){.privacy-list li{grid-template-columns:1fr;gap:4px}}
+
+/* 요금 */
+.price-table{width:100%;border-collapse:collapse;margin-top:30px;background:var(--white);font-size:15px}
+.price-table th,.price-table td{padding:13px 12px;border-bottom:1px solid var(--line);text-align:center;vertical-align:middle}
+.price-table th:first-child,.price-table td:first-child{text-align:left}
+.price-table thead th{border-bottom:2px solid var(--ink);vertical-align:bottom}
+.price-table thead th b{display:block;font-size:22px;letter-spacing:-0.02em}
+.price-table thead th span{display:block;font-size:14px;color:var(--sub);font-weight:400}
+.price-table .hl{background:var(--green-soft)}
+.yes{display:inline-block;width:26px;height:4px;background:var(--pencil);border-radius:2px;vertical-align:middle}
+.no{color:#9aa1a9}
+.price-mobile{display:none}
+.plan{border-top:1.5px solid var(--ink);padding:16px 0 10px}
+.plan h3{display:flex;justify-content:space-between;align-items:baseline;font-size:20px}
+.plan h3 b{font-size:22px}
+.plan p{font-size:15.5px;color:var(--sub);margin:6px 0 0}
+@media (max-width:860px){.price-table{display:none}.price-mobile{display:block;margin-top:22px}}
+
+.maker{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:40px}
+@media (max-width:860px){.maker{grid-template-columns:1fr}}
+.bandgreen{background:var(--green-deep);color:#fff}
+.bandgreen .intro{color:#D5E3DB}
+.bandgreen h2{color:#fff}
+.bandgreen a.btn{border-color:#fff}
+</style>
+</head>
+<body data-root="./" data-page="home">
+<a class="skip" href="#main">본문으로 건너뛰기</a>
+<header id="top"></header>
+
+<main id="main">
+<section class="hero">
+  <div class="wrap grid">
+    <div>
+      <h1>문틀에 긋던<br>아이 키를,<br>근거 있는 숫자로.</h1>
+      <p class="lead">키록은 부모 키와 아이가 자라는 기록으로 어른이 됐을 때의 키를 한 숫자가 아닌 <b>범위</b>로 보여 주는 앱입니다. 계산 방법과 출처를 모두 공개하고, 결과는 무료입니다.</p>
+      <div class="acts">
+        <a class="btn main" href="app/">체험판 써 보기</a>
+        <a class="btn" href="#basis">어떻게 계산하나요</a>
+      </div>
+      <p class="state">구글 플레이 <b>2026년 12월 출시 예정</b>. 지금은 휴대폰 인터넷 창에서 웹 체험판을 쓸 수 있어요.</p>
+    </div>
+    <div class="phones">
+      <figure class="shot back" style="margin:0"><img src="assets/screens/together.jpg" width="780" height="1732" alt="키록 함께하기 화면: 공식 도전 여섯 가지"></figure>
+      <figure class="shot" style="margin:0"><img src="assets/steps/s15.jpg" width="780" height="1688" alt="키록 예측 결과 화면: 예상 성인 키 154~170cm, 가운데 값 162cm, 문틀 눈금 위 지금 키 136.4cm"></figure>
+    </div>
+  </div>
+  <figure class="doorphoto" style="margin-bottom:0">
+    <img src="assets/doorframe.jpg" width="1600" height="490" alt="문틀에 기대 선 아이 머리 위에 책을 대고 연필로 키를 긋는 손">
+    <figcaption>집집마다 문틀에 남아 있는 연필 선. 키록은 그 선을 한 달에 한 번, 같은 방법으로 남기도록 돕습니다.</figcaption>
+  </figure>
+</section>
+<div class="ruler" aria-hidden="true"></div>
+
+<section class="sec" id="basis">
+  <div class="wrap">
+    <h2>예측은 이렇게 계산합니다</h2>
+    <p class="intro">키록 앱과 똑같은 식입니다. 부모 키를 넣어 보세요. 입력한 값은 이 화면에서만 계산되고 어디에도 보내지 않습니다.</p>
+
+    <div class="calc" role="group" aria-label="부모 키로 예상 범위 계산해 보기">
+      <div>
+        <div class="row">
+          <div class="f"><label>아이</label><div class="seg" role="group" aria-label="아이 성별"><button type="button" data-sex="male" aria-pressed="false">아들</button><button type="button" data-sex="female" aria-pressed="true">딸</button></div></div>
+        </div>
+        <div class="row">
+          <div class="f"><label for="cf">아빠 키</label><div class="unit"><input id="cf" type="number" inputmode="decimal" min="130" max="220" step="0.1" value="176"></div></div>
+          <div class="f"><label for="cm">엄마 키</label><div class="unit"><input id="cm" type="number" inputmode="decimal" min="130" max="220" step="0.1" value="161"></div></div>
+        </div>
+        <div class="out" aria-live="polite">
+          <div class="big num" id="crange">154~170<small>cm</small></div>
+          <div class="mid">가운데 값 <b class="num" id="cmid">162cm</b>, 같은 조건 아이 10명 중 9명이 이 범위에 듭니다.</div>
+          <p class="how" id="chow"></p>
+        </div>
+      </div>
+      <div class="frame-wrap"><svg class="frame-svg" id="cframe" viewBox="0 0 260 360" role="img" aria-label="문틀 눈금 위 예상 범위"></svg></div>
+    </div>
+    <p class="care" style="margin-top:16px">이 값은 부모 키만으로 본 참고 범위이며 진단이 아닙니다. 아이의 지금 키·사춘기·초경 정보가 들어가면 앱에서 따로 함께 보여 드립니다. 성장이 걱정되면 소아청소년과 전문의와 상담해 주세요.</p>
+
+    <table class="ledger">
+      <thead><tr><th>무엇을</th><th>쓰는 숫자</th><th>어디서 왔나</th></tr></thead>
+      <tbody>
+        <tr><td>부모 키가 아이 키에 이어지는 정도</td><td class="v num">0.369</td><td class="s">부모 키 합이 1cm 크면 아이 성인 키는 0.369cm 큽니다(95% 신뢰구간 0.338~0.399). Kim S, Yoo JH, Chueh HW. BMJ Paediatrics Open 2024. 국민건강영양조사 2010~2019의 젊은 성인 2,586명과 그 부모.</td></tr>
+        <tr><td>가운데 기준</td><td class="v num">남 173.6cm<br>여 160.6cm</td><td class="s">질병관리청 2017 소아청소년 성장도표의 18세 중앙값. 지금 부모 세대 평균 키 합 334.2cm(173.6 + 160.6)를 기준점으로 둡니다.</td></tr>
+        <tr><td>예측 범위</td><td class="v num">가운데 값 ±8cm</td><td class="s">원 연구의 평균 오차(평균제곱오차 23.8, 약 4.9cm)로 계산한 90% 범위. 10명 중 9명이 들어가는 폭입니다.</td></tr>
+        <tr><td>지금 키 위치</td><td class="v num">개월마다</td><td class="s">질병관리청 2017 성장도표의 개월별 키 분포(LMS 방법, Cole·Green 1992)로 같은 나이·성별 안의 위치를 구하고, 그 위치를 18세까지 이었을 때의 키를 나란히 보여 줍니다(만 3세~18세 전).</td></tr>
+        <tr><td>딸의 초경 뒤 남은 성장</td><td class="v num">평균 6.6cm</td><td class="s">초경 뒤 4년 동안 평균 6.6cm, 그중 첫 1년 3.8cm. 초경이 11세 전이면 8.2cm, 13세 뒤면 4.4cm. Gaete 외, Hormone Research in Paediatrics 2025(칠레 여아 534명).</td></tr>
+        <tr><td>상담을 권하는 속도</td><td class="v num">1년 4cm 이하</td><td class="s">만 4세 이후, 6개월 넘게 떨어진 두 기록으로 본 1년 성장량. 서울아산병원 성장클리닉 안내의 '연 4cm 이하'를 참고한 앱 계산 기준입니다.</td></tr>
+      </tbody>
+    </table>
+
+    <div class="notes">
+      <div><h3>왜 '정확도 몇 %'라고 하지 않나요</h3><p>무엇을 맞혔다는 건지 정할 수 없는 숫자는 쓰지 않습니다. 대신 '10명 중 9명이 들어가는 범위'처럼 확인할 수 있는 말로 보여 드립니다. 부모 키가 설명하는 몫은 30% 안팎이고, 나머지는 아이마다 다릅니다.</p></div>
+      <div><h3>왜 예전 공식을 그대로 쓰지 않나요</h3><p>흔히 쓰는 (아빠 + 엄마 ± 13) ÷ 2 식은 한국 성인 키를 남 4.86cm, 여 4.81cm 낮게 봤습니다. 반대로 한국 연구식을 그대로 쓰면 지금 부모 세대에서는 약 4cm 높게 나옵니다. 그래서 기울기만 연구에서 가져오고 가운데는 지금 세대에 맞췄습니다.</p></div>
+      <div><h3>두 값을 억지로 합치지 않습니다</h3><p>부모 키 범위와 지금 키 위치로 본 값은 따로, 나란히 보여 줍니다. 둘을 하나로 합칠 근거 자료를 확인하기 전까지는 합친 숫자를 내세우지 않습니다.</p></div>
+    </div>
+  </div>
+</section>
+<div class="ruler" aria-hidden="true"></div>
+
+<section class="sec" id="flow">
+  <div class="wrap">
+    <h2>앱에서는 이렇게 씁니다</h2>
+    <p class="intro">가입 없이 시작해 2~3분이면 첫 결과가 나옵니다. 그다음부터는 한 달에 한 번 키를 재고, 하루 세 가지 생활 습관을 체크합니다.</p>
+    <div class="flow">
+      <div class="step"><div class="n">1단계</div><div><h3>아이 등록 11단계</h3><p>성별, 부르는 이름(별명), 태어난 해와 달, 보호자 동의, 아빠·엄마 키를 넣으면 결과가 나옵니다. 지금 키·몸무게·잠·사춘기·초경은 아는 만큼만 넣고 건너뛸 수 있습니다.</p><ul><li>실명·생일 날짜는 묻지 않습니다.</li><li>만 14세 미만은 보호자 동의 뒤에만 기록합니다.</li></ul><p style="margin-top:12px"><a href="manual/#register">등록 순서 사진으로 보기</a></p></div><figure class="shot" style="margin:0"><img loading="lazy" src="assets/steps/s08.jpg" width="780" height="1688" alt="아빠 키를 넣는 등록 화면, 5/11 단계"></figure></div>
+      <div class="step"><div class="n">2단계</div><div><h3>예측 결과: 범위와 가운데 값</h3><p>문틀 눈금 위에 예상 범위가 띠로, 지금 키가 연필 선으로 그려집니다. 지금 키 위치로 이어 본 18세 키도 동그라미로 함께 보입니다. 결과는 무료이고 가입 전에도 숨기지 않습니다.</p></div><figure class="shot" style="margin:0"><img loading="lazy" src="assets/screens/result.jpg" width="780" height="1732" alt="예측 결과와 계산 과정이 보이는 화면"></figure></div>
+      <div class="step"><div class="n">3단계</div><div><h3>오늘 화면: 미션 세 개와 성장 속도</h3><p>운동 하나, 잠 9시간, 식습관 하나를 체크하면 연속 기록이 쌓입니다. 아래에는 성장 속도 신호등이 있습니다. 미션은 성장기에 좋은 생활 습관을 돕는 활동이며, 키가 크는 것을 약속하지는 않습니다.</p></div><figure class="shot" style="margin:0"><img loading="lazy" src="assets/screens/home.jpg" width="780" height="1732" alt="오늘 미션 세 가지와 성장 속도 신호등"></figure></div>
+      <div class="step"><div class="n">4단계</div><div><h3>함께하기: 가족·친구와 같은 도전</h3><p>공식 도전 여섯 가지(줄넘기 30일, 잠 9시간 2주, 달리기 4주, 계단 오르기 2주, 스트레칭 2주, 농구 4주)에 참여하거나, 우리 가족 도전을 만들어 초대 코드로 부를 수 있습니다. 응원은 정해진 문구로만 보냅니다.</p></div><figure class="shot" style="margin:0"><img loading="lazy" src="assets/screens/together.jpg" width="780" height="1732" alt="공식 도전 여섯 가지가 보이는 함께하기 화면"></figure></div>
+      <div class="step"><div class="n">5단계</div><div><h3>월간 리포트와 병원에 보여 줄 한 장</h3><p>키 위치 변화(1장)와 사춘기·초경 시기 안내(4장)는 무료입니다. 성장 속도 해석, 기록이 쌓이며 달라지는 예측, 상담 기준 비춰 보기, 병원·가족에게 보여 줄 한 장 PDF는 유료 리포트에 있습니다.</p></div><figure class="shot" style="margin:0"><img loading="lazy" src="assets/screens/report5.jpg" width="780" height="2452" alt="리포트 5장 상담을 권하는 일반 기준" style="height:620px;object-fit:cover;object-position:top"></figure></div>
+    </div>
+  </div>
+</section>
+<div class="ruler" aria-hidden="true"></div>
+
+<section class="sec" id="signal">
+  <div class="wrap two">
+    <div>
+      <h2>성장 속도 신호등</h2>
+      <p class="intro">최근 기록 사이에 자란 키를 1년으로 환산해, 같은 나이 아이들의 가운데 성장량(질병관리청 2017 성장도표)과 견줍니다. 병 이름이나 뼈 나이는 말하지 않고, 필요한 때 상담만 권합니다.</p>
+      <div class="lights">
+        <div class="light"><div class="lamp g" aria-hidden="true"><i></i><i></i><i></i></div><div><b>잘 크고 있어요</b><span>같은 나이 가운데 성장량의 80% 이상</span></div></div>
+        <div class="light"><div class="lamp y" aria-hidden="true"><i></i><i></i><i></i></div><div><b>조금 느린 편이에요</b><span>가운데 성장량의 80%보다 느릴 때. 다음 기록을 지켜봅니다.</span></div></div>
+        <div class="light"><div class="lamp r" aria-hidden="true"><i></i><i></i><i></i></div><div><b>소아과 상담을 권해요</b><span>만 4세 이후, 6개월 넘는 간격에서 1년 4cm 이하. 진단이 아닌 상담 권유 기준이며 무료로 보여 드립니다.</span></div></div>
+        <div class="light"><div class="lamp n" aria-hidden="true"><i></i><i></i><i></i></div><div><b>기다리거나 다시 재요</b><span>석 달보다 짧은 간격은 재는 오차가 커서 속도를 내지 않습니다. 키가 줄어든 값은 판정하지 않고 다시 재기를 권합니다. 초경 뒤 딸은 속도가 원래 줄어드는 때라 회색 안내로 보여 드립니다.</span></div></div>
+      </div>
+    </div>
+    <div>
+      <h3 style="font-size:20px;margin-top:6px">같은 나이 아이들은 1년에 얼마나 자랄까</h3>
+      <p style="color:var(--sub);font-size:15.5px;margin-top:6px">질병관리청 2017 성장도표 가운데 곡선으로 계산한 1년 성장량입니다. 아이마다 다르며, 신호등은 이 값과 우리 아이 기록을 견줍니다.</p>
+      <div class="bars" id="vbars" aria-label="나이별 1년 성장량 막대 그래프"></div>
+      <p style="font-size:14px;color:var(--faint);margin-top:8px">사춘기 끝 무렵처럼 가운데 아이도 1년 4cm 이하로 느려지는 나이에서는 빨강 대신 '속도가 줄어드는 시기'로 안내합니다.</p>
+    </div>
+  </div>
+</section>
+
+<section class="sec bandgreen" id="library">
+  <div class="wrap">
+    <h2>성장 자료실</h2>
+    <p class="intro">질병관리청·대한소아내분비학회 같은 기관 자료, 대학병원 건강정보, 소아청소년과 전문의 채널, 잠·운동·영양·초경과 성장에 관한 연구를 한곳에 모았습니다. 연구마다 근거 수준과 핵심 숫자를 함께 적었습니다.</p>
+    <div class="lib-grid" id="libgrid" style="border-color:#fff"></div>
+    <p style="margin-top:22px"><a class="btn main" style="background:#fff;color:var(--green-deep)" href="library/">자료실 열기</a> &nbsp; <a class="btn" style="background:transparent;color:#fff" href="library/#evidence">근거로 보는 성장</a></p>
+  </div>
+</section>
+
+<section class="sec" id="privacy">
+  <div class="wrap two">
+    <div>
+      <h2>아이 정보는 적게 받고, 휴대폰 안에 둡니다</h2>
+      <p class="intro">키록은 회원 가입이 없습니다. 아이의 키와 부모 키는 서버로 보내지 않습니다.</p>
+      <ul class="privacy-list">
+        <li><b>받지 않는 것</b><span>실명, 생일 날짜, 전화번호, 이메일, 위치</span></li>
+        <li><b>휴대폰 안에만</b><span>아이 키·몸무게, 부모 키, 잠, 사춘기·초경 기록, 리포트</span></li>
+        <li><b>함께하기를 켤 때만</b><span>도전에 필요한 별명·성별·태어난 해와 달, 운동·잠 체크가 서버에 올라갑니다.</span></li>
+        <li><b>만 14세 미만</b><span>보호자(법정대리인) 동의를 받은 뒤에만 기록합니다.</span></li>
+        <li><b>지우기</b><span>'이 기기의 모든 기록 지우기' 한 번, 또는 앱 삭제로 모두 지워집니다.</span></li>
+      </ul>
+      <p style="margin-top:14px"><a href="privacy/">개인정보 처리방침 전문</a></p>
+    </div>
+    <figure class="shot" style="margin:0;max-width:340px;justify-self:center"><img loading="lazy" src="assets/steps/s07.jpg" width="780" height="1688" alt="정보 저장 동의 화면: 만 14세 미만 자녀는 법정대리인 동의"></figure>
+  </div>
+</section>
+<div class="ruler" aria-hidden="true"></div>
+
+<section class="sec" id="price">
+  <div class="wrap">
+    <h2>요금</h2>
+    <p class="intro">예측과 기록, 상담 권유 판정은 처음부터 끝까지 무료입니다. 더 자세한 리포트가 필요할 때만 고르세요. 결제는 구글 플레이 결제로만 받으며, 출시 전인 지금은 결제가 없습니다.</p>
+    <table class="price-table">
+      <thead><tr><th scope="col">무엇이 열리나</th>
+        <th scope="col"><b>무료</b><span>언제나</span></th>
+        <th scope="col"><b class="num">2,900원</b><span>리포트 한 번</span></th>
+        <th scope="col" class="hl"><b class="num">29,000원</b><span>평생권, 한 번 결제</span></th>
+        <th scope="col"><b class="num">19,900원</b><span>연 구독</span></th>
+        <th scope="col"><b class="num">4,900원</b><span>월 구독</span></th></tr></thead>
+      <tbody>
+        <tr><td>예측 결과·키 기록·성장 곡선·백업</td><td><span class="yes" aria-label="포함"></span></td><td><span class="yes" aria-label="포함"></span></td><td class="hl"><span class="yes" aria-label="포함"></span></td><td><span class="yes" aria-label="포함"></span></td><td><span class="yes" aria-label="포함"></span></td></tr>
+        <tr><td>성장 속도 신호등·상담 권유 판정</td><td><span class="yes" aria-label="포함"></span></td><td><span class="yes" aria-label="포함"></span></td><td class="hl"><span class="yes" aria-label="포함"></span></td><td><span class="yes" aria-label="포함"></span></td><td><span class="yes" aria-label="포함"></span></td></tr>
+        <tr><td>오늘 미션·운동 고르기 22가지·함께하기</td><td><span class="yes" aria-label="포함"></span></td><td><span class="yes" aria-label="포함"></span></td><td class="hl"><span class="yes" aria-label="포함"></span></td><td><span class="yes" aria-label="포함"></span></td><td><span class="yes" aria-label="포함"></span></td></tr>
+        <tr><td>리포트 1장 키 위치 변화, 4장 사춘기·초경 안내</td><td><span class="yes" aria-label="포함"></span></td><td><span class="yes" aria-label="포함"></span></td><td class="hl"><span class="yes" aria-label="포함"></span></td><td><span class="yes" aria-label="포함"></span></td><td><span class="yes" aria-label="포함"></span></td></tr>
+        <tr><td>리포트 2·3·5장: 성장 속도 해석, 예측 변화, 상담 기준 풀이</td><td class="no">없음</td><td>이번 달 1회</td><td class="hl">매달</td><td>매달</td><td>매달</td></tr>
+        <tr><td>리포트 6장: 병원·가족에게 보여 줄 한 장 PDF·이미지</td><td class="no">없음</td><td>이번 달 1회</td><td class="hl">매달</td><td>매달</td><td>매달</td></tr>
+        <tr><td>아이 여러 명</td><td class="no">—</td><td>첫째 아이만</td><td class="hl">모두</td><td>모두</td><td>모두</td></tr>
+        <tr><td>기간</td><td>기한 없음</td><td>한 번</td><td class="hl">기한 없음</td><td>1년, 자동 갱신</td><td>1달, 자동 갱신</td></tr>
+      </tbody>
+    </table>
+    <div class="price-mobile">
+      <div class="plan"><h3>무료 <b>0원</b></h3><p>예측 결과, 키 기록·성장 곡선, 성장 속도 신호등과 상담 권유 판정, 오늘 미션, 운동 고르기, 함께하기, 리포트 1·4장, 백업.</p></div>
+      <div class="plan"><h3>리포트 한 번 <b class="num">2,900원</b></h3><p>이번 달 자세한 리포트(2·3·5·6장) 1회. 처음 등록한 아이 몫.</p></div>
+      <div class="plan" style="background:var(--green-soft);padding-left:12px;padding-right:12px"><h3>평생권 <b class="num">29,000원</b></h3><p>한 번 결제, 기한 없음. 매달 새 리포트, 아이 여러 명.</p></div>
+      <div class="plan"><h3>연 구독 <b class="num">19,900원</b></h3><p>매달 새 리포트, 아이 여러 명. 자동 갱신, 언제든 해지. 한 달로 나누면 약 1,660원.</p></div>
+      <div class="plan"><h3>월 구독 <b class="num">4,900원</b></h3><p>매달 새 리포트, 아이 여러 명. 자동 갱신, 언제든 해지.</p></div>
+    </div>
+    <p style="margin-top:16px;font-size:15px;color:var(--sub)"><span class="pc-only"><span class="yes" aria-hidden="true"></span> 표시는 포함이라는 뜻입니다. </span>구독 해지와 환불은 구글 플레이 규정을 따릅니다. <a href="support/#refund">환불 안내</a></p>
+  </div>
+</section>
+<div class="ruler" aria-hidden="true"></div>
+
+<section class="sec" id="maker">
+  <div class="wrap maker">
+    <div>
+      <h2>만든 곳</h2>
+      <p class="intro">키록은 꿈의 색깔이 만들고 운영합니다. 부모가 병원에 가기 전에 집에서 차분히 기록을 쌓고, 필요할 때 그 기록을 들고 상담받을 수 있게 돕는 것이 목표입니다.</p>
+      <p style="margin-top:16px;font-size:16px">숫자 하나를 바꿀 때마다 근거와 이유를 결정 기록으로 남기고, 계산식은 자동 시험으로 확인합니다. 앱이 내는 모든 판정은 진단이 아니며, 의료 판단은 소아청소년과 전문의의 몫입니다.</p>
+    </div>
+    <div>
+      <ul class="privacy-list" style="margin-top:6px">
+        <li><b>상호</b><span>꿈의 색깔(개인사업자)</span></li>
+        <li><b>사업자등록번호</b><span class="num">223-38-01338</span></li>
+        <li><b>통신판매업 신고</b><span>신고 예정</span></li>
+        <li><b>문의</b><span><a href="support/">문의 페이지</a>에서 자동 상담과 문의 남기기를 쓸 수 있습니다.</span></li>
+      </ul>
+    </div>
+  </div>
+</section>
+</main>
+
+<footer id="foot"></footer>
+<script src="site.config.js"></script>
+<script src="assets/faq.js"></script>
+<script src="assets/common.js"></script>
+<script src="assets/velocity.js"></script>
+<script>
+(function(){
+  /* 앱 src/engine/data/koreaParentHeight.ts 와 같은 값 */
+  var M={male:173.6037,female:160.6484}, SLOPE=0.369, SUM=334.2, HALF=8;
+  var sex='female';
+  var f=document.getElementById('cf'), m=document.getElementById('cm');
+  var segs=document.querySelectorAll('.seg button');
+  segs.forEach(function(b){b.addEventListener('click',function(){sex=b.dataset.sex;segs.forEach(function(x){x.setAttribute('aria-pressed',x===b)});run();});});
+  f.addEventListener('input',run); m.addEventListener('input',run);
+  function frame(lo,hi,mid){
+    var min=sex==='male'?150:140, max=sex==='male'?200:190;
+    while(lo<min+2)min-=10; while(hi>max-2)max+=10;
+    var top=20,bot=340,y=function(v){return bot-(v-min)/(max-min)*(bot-top)};
+    var s='<rect x="64" y="12" width="150" height="336" fill="none" stroke="#1B1F24" stroke-width="3"/>';
+    for(var v=min;v<=max;v++){var big=v%10===0,mid5=v%5===0;s+='<line x1="64" x2="'+(64+(big?16:mid5?11:6))+'" y1="'+y(v)+'" y2="'+y(v)+'" stroke="#1B1F24" stroke-width="'+(big?2:1)+'"/>';if(big)s+='<text x="54" y="'+(y(v)+5)+'" font-size="14" font-weight="700" text-anchor="end" fill="#1B1F24">'+v+'</text>';}
+    s+='<rect x="96" y="'+y(hi)+'" width="104" height="'+(y(lo)-y(hi))+'" fill="#9CC9B4" opacity=".55"/>';
+    s+='<line x1="96" x2="200" y1="'+y(mid)+'" y2="'+y(mid)+'" stroke="#E4572E" stroke-width="3.5"/>';
+    s+='<text x="148" y="'+(y(hi)+18)+'" font-size="13" text-anchor="middle" fill="#173F31" font-weight="700">'+lo+'~'+hi+'</text>';
+    s+='<text x="222" y="'+(y(mid)+5)+'" font-size="13" fill="#E4572E" font-weight="800">'+mid+'</text>';
+    document.getElementById('cframe').innerHTML=s;
+  }
+  function run(){
+    var a=parseFloat(f.value), b=parseFloat(m.value);
+    var ok=function(v){return isFinite(v)&&v>=130&&v<=220};
+    var R=document.getElementById('crange'), D=document.getElementById('cmid'), H=document.getElementById('chow');
+    if(!ok(a)||!ok(b)){R.innerHTML='<span class="err" style="font-size:20px">키는 130~220cm 사이로 넣어 주세요</span>';D.textContent='—';H.textContent='';return;}
+    var raw=M[sex]+SLOPE*(a+b-SUM), mid=Math.round(raw), lo=mid-HALF, hi=mid+HALF;
+    R.innerHTML=lo+'~'+hi+'<small>cm</small>'; D.textContent=mid+'cm';
+    H.textContent=(sex==='male'?'아들':'딸')+' = '+(sex==='male'?'173.6':'160.6')+' + 0.369 × ('+a+' + '+b+' − 334.2) = '+raw.toFixed(1)+' → 가운데 값 '+mid+'cm, 범위는 위아래 8cm';
+    frame(lo,hi,mid);
+  }
+  run();
+
+  /* 나이별 1년 성장량(질병관리청 2017 남녀 중앙값 차이) — 빌드 때 앱 LMS 표에서 뽑아 넣은 값 */
+  var V=window.KIROK_VELOCITY||null;
+  var el=document.getElementById('vbars');
+  if(V){
+    var W=520,H=230,pad=34,n=V.ages.length,bw=(W-pad-10)/n,maxv=8;
+    var y=function(v){return H-24-(v/maxv)*(H-44)};
+    var s='<svg viewBox="0 0 '+W+' '+H+'" role="img" aria-label="나이별 1년 성장량, 아들과 딸">';
+    for(var g=0;g<=8;g+=2){s+='<line x1="'+pad+'" x2="'+W+'" y1="'+y(g)+'" y2="'+y(g)+'" stroke="#DEDBD2"/><text x="'+(pad-6)+'" y="'+(y(g)+4)+'" font-size="12" text-anchor="end" fill="#4A525D">'+g+'</text>';}
+    s+='<line x1="'+pad+'" x2="'+W+'" y1="'+y(4)+'" y2="'+y(4)+'" stroke="#E4572E" stroke-dasharray="5 4"/><text x="'+W+'" y="'+(y(4)-5)+'" font-size="12" text-anchor="end" fill="#A3402B">1년 4cm</text>';
+    V.ages.forEach(function(a,i){var x=pad+6+i*bw;var b=V.boy[i],gg=V.girl[i];
+      s+='<rect x="'+x+'" y="'+y(b)+'" width="'+(bw/2-2)+'" height="'+(y(0)-y(b))+'" fill="#23604A"/>';
+      s+='<rect x="'+(x+bw/2-1)+'" y="'+y(gg)+'" width="'+(bw/2-2)+'" height="'+(y(0)-y(gg))+'" fill="#9CC9B4"/>';
+      s+='<text x="'+(x+bw/2-2)+'" y="'+(H-8)+'" font-size="12" text-anchor="middle" fill="#1B1F24">'+a+'</text>';});
+    s+='</svg><p style="font-size:14px;color:#4A525D;margin:6px 0 0"><span style="display:inline-block;width:12px;height:12px;background:#23604A;vertical-align:-1px"></span> 아들 &nbsp; <span style="display:inline-block;width:12px;height:12px;background:#9CC9B4;vertical-align:-1px"></span> 딸 &nbsp; 가로: 만 나이(그해 1년 동안), 세로: cm</p>';
+    el.innerHTML=s;
+  }
+
+  /* 자료실 묶음 수 */
+  var groups=[['공공기관·학회','질병관리청 성장도표, 학회·기관 발표 자료'],['대학병원 정보','성장·사춘기·성조숙증 건강정보'],['유튜브 전문 채널','소아청소년과·소아내분비 전문의 채널'],['주제별 연구','부모 키 예측, 잠, 운동, 영양, 초경과 사춘기']];
+  var gEl=document.getElementById('libgrid');
+  function drawLib(list){
+    gEl.innerHTML=groups.map(function(g,i){
+      var c=list?list.filter(function(r){return (r.group||'').indexOf(g[0].slice(0,2))===0||(i===3&&/연구|논문/.test(r.group||''))}).length:0;
+      return '<a href="library/#g'+i+'" style="border-color:rgba(255,255,255,.25);color:#fff"><b style="color:#fff">'+g[0]+'</b><span style="color:#D5E3DB">'+g[1]+'</span>'+(c?'<em style="color:#FFC9B6">자료 '+c+'건</em>':'')+'</a>';
+    }).join('');
+  }
+  drawLib(null);
+  fetch('data/resources.json',{cache:'no-store'}).then(function(r){return r.ok?r.json():null}).then(function(j){if(Array.isArray(j))drawLib(j)}).catch(function(){});
+})();
+</script>
+</body>
+</html>

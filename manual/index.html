@@ -1,0 +1,197 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>키록 사용 설명서</title>
+<meta name="description" content="키록 설치부터 아이 등록 11단계, 예측 결과 읽는 법, 오늘 미션, 함께하기, 리포트, 백업까지 사진으로 안내합니다.">
+<meta property="og:type" content="article">
+<meta property="og:title" content="키록 사용 설명서 — 사진으로 따라 하기">
+<meta property="og:description" content="설치, 아이 등록 11단계, 예측 결과 읽기, 오늘 미션, 함께하기, 리포트, 백업까지 한 화면에서 보세요.">
+<meta property="og:image" content="https://wonyul01-collab.github.io/kirok/og.jpg">
+<meta property="og:image:width" content="1200"><meta property="og:image:height" content="630">
+<meta property="og:url" content="https://wonyul01-collab.github.io/kirok/manual/">
+<link rel="icon" href="../assets/favicon.png">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+<link rel="stylesheet" href="../assets/site.css">
+<style>
+html,body{height:100%}
+body{display:flex;flex-direction:column}
+.man{flex:1;min-height:0;display:grid;grid-template-columns:250px minmax(0,1fr);max-width:1400px;width:100%;margin:0 auto}
+.cats{border-right:1px solid var(--line);overflow:auto;padding:16px 0;background:var(--paper)}
+.cats h1{font-size:18px;padding:0 18px 10px;color:var(--sub);font-weight:700}
+.cats button{display:flex;gap:10px;align-items:baseline;width:100%;text-align:left;border:0;background:none;padding:11px 18px;font:inherit;font-size:16px;color:var(--ink);cursor:pointer;border-left:4px solid transparent}
+.cats button i{font-style:normal;font-size:14px;color:var(--faint);min-width:20px;font-variant-numeric:tabular-nums}
+.cats button[aria-selected=true]{background:var(--white);border-left-color:var(--green);font-weight:800;color:var(--green-deep)}
+.cats button:hover{background:var(--white)}
+.pane{min-width:0;min-height:0;display:grid;grid-template-rows:auto auto minmax(0,1fr)}
+.tabs{display:flex;gap:2px;overflow-x:auto;border-bottom:1.5px solid var(--ink);padding:12px 20px 0;background:var(--paper);scrollbar-width:thin}
+.tabs button{flex:none;border:1px solid var(--line);border-bottom:0;background:#EFECE4;padding:9px 14px;font:inherit;font-size:16px;cursor:pointer;border-radius:6px 6px 0 0;color:var(--ink)}
+.tabs button[aria-selected=true]{background:var(--green);color:#fff;border-color:var(--green);font-weight:700}
+.now{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:12px 20px;border-bottom:1px solid var(--line);background:var(--white)}
+.now p{margin:0;font-size:16px}
+.now p b{color:var(--green-deep)}
+.now .nav2{display:flex;gap:8px;flex:none}
+.stage{min-height:0;overflow:auto;padding:22px 24px 90px;display:grid;grid-template-columns:minmax(0,1fr) minmax(220px,340px);gap:32px;align-items:start}
+.stage h2{font-size:26px;margin-bottom:12px}
+.stage .txt{font-size:16.5px;max-width:40em}
+.stage .txt p{margin:0 0 12px}
+.stage .txt ul,.stage .txt ol{padding-left:22px;margin:0 0 12px}
+.stage .txt li{margin:5px 0}
+.stage .pic{position:sticky;top:0}
+.stage .pic img{border:1.5px solid var(--ink);border-radius:18px;background:#fff;max-height:calc(100vh - 230px);width:auto;margin:0 auto}
+.stage .pic figcaption{font-size:14px;color:var(--faint);margin-top:8px;text-align:center}
+.tip{border-left:4px solid var(--green);background:var(--green-soft);padding:10px 14px;margin:12px 0;font-size:15.5px}
+.warnbox{border-left:4px solid var(--pencil);background:var(--white);padding:10px 14px;margin:12px 0;font-size:15.5px}
+table.t{border-collapse:collapse;width:100%;background:#fff;font-size:15px;margin:8px 0 14px}
+table.t th,table.t td{border-bottom:1px solid var(--line);padding:9px 10px;text-align:left;vertical-align:top}
+table.t th{background:var(--paper)}
+.video{position:relative;background:#1B1F24;border-radius:12px;overflow:hidden;aspect-ratio:16/9;max-width:760px}
+.video video{width:100%;height:100%;display:block}
+.video .wait{position:absolute;inset:0;display:none;flex-direction:column;align-items:center;justify-content:center;color:#E7EFEA;text-align:center;padding:20px}
+.video.none .wait{display:flex}
+.video.none video{visibility:hidden}
+.video .wait b{font-size:22px;color:#fff;margin-bottom:6px}
+.exgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(118px,1fr));gap:10px;margin:8px 0 16px}
+.exgrid figure{margin:0;background:#fff;border:1px solid var(--line);border-radius:8px;padding:8px;text-align:center}
+.exgrid img{width:100%;aspect-ratio:1;object-fit:contain}
+.exgrid figcaption{font-size:15px;font-weight:700}
+.exgrid small{display:block;font-size:13px;color:var(--faint)}
+.ch{margin:14px 0 4px;font-size:18px}
+.faq dt{font-weight:800;margin-top:14px;font-size:16.5px}
+.faq dd{margin:4px 0 0;color:var(--ink)}
+.stage .wide{grid-column:1 / -1}
+@media (max-width:900px){
+  html,body{height:auto}
+  .man{display:block}
+  .cats{border-right:0;border-bottom:1px solid var(--line);display:flex;overflow-x:auto;padding:8px 8px 0;gap:2px}
+  .cats h1{display:none}
+  .cats button{flex:none;width:auto;border-left:0;border-bottom:4px solid transparent;padding:10px 12px;font-size:16px}
+  .cats button[aria-selected=true]{border-bottom-color:var(--green)}
+  .cats button i{display:none}
+  .pane{display:block}
+  .tabs{padding:10px 12px 0}
+  .now{flex-wrap:wrap;padding:12px 16px}
+  .stage{display:block;padding:18px 16px 100px}
+  .stage .pic{position:static;margin-top:18px}
+  .stage .pic img{max-height:none;width:min(100%,340px)}
+}
+</style>
+</head>
+<body data-root="../" data-page="manual">
+<a class="skip" href="#stage">본문으로 건너뛰기</a>
+<header id="top"></header>
+<div class="man">
+  <nav class="cats" role="tablist" aria-label="설명서 묶음" id="cats"><h1>사용 설명서</h1></nav>
+  <section class="pane">
+    <div class="tabs" role="tablist" aria-label="진행 순서" id="tabs"></div>
+    <div class="now"><p id="nowline"></p><div class="nav2"><button class="btn small" id="prev">이전</button><button class="btn main small" id="next">다음</button></div></div>
+    <div class="stage" id="stage" tabindex="-1"></div>
+  </section>
+</div>
+<script src="../site.config.js"></script>
+<script src="../assets/faq.js"></script>
+<script>
+var S='../assets/steps/', P='../assets/screens/', E='../assets/ex/';
+function img(src,alt,cap){return {src:src,alt:alt,cap:cap||''};}
+var CH=[
+ {id:'start',name:'시작하기',tabs:[
+  {t:'영상으로 보기',video:true,h:'영상으로 먼저 보기',x:'<p>설치부터 첫 결과, 오늘 미션 체크까지 한 번에 보여 드리는 영상입니다. 글로 보고 싶으면 위의 다음 탭이나 왼쪽 묶음을 차례로 눌러 주세요.</p><div class="tip">이 설명서는 휴대폰에서도 한 손으로 넘겨 보도록 만들었어요. 카톡으로 가족에게 이 주소를 보내 함께 보세요.</div>'},
+  {t:'구글 플레이',h:'구글 플레이에서 설치하기',x:'<p>키록은 <b>2026년 12월 구글 플레이 출시를 준비하고 있어요.</b> 출시되면 구글 플레이에서 \'키록\'을 찾아 설치 단추를 누르면 됩니다.</p><ol><li>구글 플레이 앱을 엽니다.</li><li>검색 칸에 키록을 입력합니다.</li><li>판매자 이름이 <b>꿈의 색깔</b>인지 확인하고 설치합니다.</li></ol><div class="tip">회원 가입은 없어요. 설치하고 바로 시작하면 됩니다.</div>',pic:img(S+'s01.jpg','키록 첫 화면: 우리 아이, 어른이 되면 키가 얼마일까요?','처음 열면 나오는 화면')},
+  {t:'웹 체험판',h:'지금 바로 웹 체험판으로 써 보기',x:'<p>출시 전에도 휴대폰이나 컴퓨터의 인터넷 창에서 키록을 그대로 써 볼 수 있어요.</p><p><a class="btn main" href="../app/">웹 체험판 열기</a></p><ul><li>기록은 그 인터넷 창(브라우저) 안에만 저장돼요. 창의 방문 기록을 지우면 기록도 사라질 수 있어요.</li><li>체험판에서는 결제가 없고, 리포트 전체를 미리 볼 수 있어요.</li></ul>',pic:img(S+'s01.jpg','키록 첫 화면','웹 체험판도 같은 화면이에요')}
+ ]},
+ {id:'register',name:'아이 등록 11단계',tabs:[
+  {t:'시작',h:'시작하기 → 누가 쓰나요?',x:'<p>첫 화면에서 <b>시작하기</b>를 누르고, 누가 쓰는지 고릅니다.</p><ul><li><b>보호자(부모)입니다</b>: 자녀 여러 명을 등록할 수 있어요. 아래에 화면에서 부를 보호자 이름(별명)을 씁니다. 예: 서윤 엄마.</li><li><b>제가 직접 씁니다</b>: 만 14세 이상만 가능해요.</li></ul><div class="tip">실명이 아니어도 됩니다. 이름은 이 휴대폰 화면에만 보여요.</div>',pic:img(S+'s03.jpg','누가 쓰나요 화면, 보호자 이름 서윤 엄마','누가 쓰나요')},
+  {t:'1 성별',h:'1단계: 아들인가요, 딸인가요?',x:'<p>아들 또는 딸을 고르고 <b>다음</b>을 누릅니다. 딸이면 마지막에 초경 질문이 나오고, 초경을 했다면 따로 계산해요.</p>',pic:img(S+'s04.jpg','아이는 아들인가요 딸인가요 화면','1/11')},
+  {t:'2 이름',h:'2단계: 아이를 뭐라고 부를까요?',x:'<p>화면에서 부를 이름을 씁니다. 별명이어도 돼요.</p>',pic:img(S+'s05.jpg','아이 별명 입력 화면','2/11')},
+  {t:'3 태어난 해',h:'3단계: 언제 태어났나요?',x:'<p>태어난 해와 달만 넣습니다. 날짜(일)는 묻지 않아요. 나이는 개월 단위로 계산해요.</p>',pic:img(S+'s06.jpg','태어난 해와 달 입력 화면','3/11')},
+  {t:'4 동의',h:'4단계: 정보 저장 동의',x:'<p>키·몸무게·잠·사춘기 정보가 이 휴대폰 안에만 저장되고 서버로 보내지 않는다는 안내를 읽고 동의합니다.</p><p>아이가 만 14세 미만이면 <b>법정대리인(부모 등)이 동의</b>하는 칸이 함께 나와요. 두 칸 모두 체크해야 다음으로 갑니다.</p>',pic:img(S+'s07.jpg','정보 저장 동의 화면','4/11')},
+  {t:'5 아빠 키',h:'5단계: 아빠 키',x:'<p>아빠 키를 cm로 넣습니다. 정확히 모르면 대략적인 키를 넣어도 돼요. 130~220cm 사이만 받아요(잘못 친 숫자를 거르려는 것이에요).</p>',pic:img(S+'s08.jpg','아빠 키 176 입력 화면','5/11')},
+  {t:'6 엄마 키',h:'6단계: 엄마 키',x:'<p>엄마 키를 넣습니다. 예측 범위는 아빠·엄마 키로 계산해요.</p>',pic:img(S+'s09.jpg','엄마 키 161 입력 화면','6/11')},
+  {t:'7 형제자매',h:'7단계: 형제·자매의 키(선택)',x:'<p>형제자매 키는 예측 범위 계산에는 들어가지 않고 기록으로만 보관해요. 없거나 모르면 <b>건너뛰기</b>를 누르세요.</p>',pic:img(S+'s10.jpg','형제자매 키 입력 화면','7/11')},
+  {t:'8 지금 키',h:'8단계: 지금 키와 몸무게',x:'<p>오늘 잰 키를 넣으면 첫 기록이 됩니다. 몸무게는 선택이에요. 지금 예측 범위는 부모 키로 계산하고, 지금 키 위치는 따로 함께 보여 드려요.</p><div class="tip">재는 법: 아침에 신발·양말을 벗고 발뒤꿈치·엉덩이·어깨를 벽에 붙인 뒤 머리 위에 책을 수평으로 대고 재요.</div>',pic:img(S+'s11.jpg','지금 키 136.4cm, 몸무게 31kg 입력 화면','8/11')},
+  {t:'9 잠',h:'9단계: 하루에 몇 시간 자나요?',x:'<p>평소 잠 시간을 고릅니다. 오늘 미션의 \'잠 9시간\'과 이어져요.</p>',pic:img(S+'s12.jpg','잠 시간 고르기 화면','9/11')},
+  {t:'10 사춘기',h:'10단계: 사춘기 변화는 어느 정도인가요?',x:'<p>느끼는 대로 고르세요. 기록용이며 단계를 판정하지 않아요. 잘 모르면 \'잘 모르겠어요\'를 고르면 나이로 짐작해 계산해요.</p>',pic:img(S+'s13.jpg','사춘기 변화 고르기 화면','10/11')},
+  {t:'11 초경',h:'11단계: 초경을 했나요?(딸)',x:'<p>딸만 나오는 질문이에요. \'했어요\'를 고르면 초경 연월을 넣는 칸이 나오고, 결과에 \'지금 키 + 초경 뒤 남은 성장\'이 함께 나와요.</p><p>마지막으로 <b>결과 보기</b>를 누르면 끝!</p>',pic:img(S+'s14.jpg','초경 여부 고르기 화면','11/11')},
+  {t:'결과',h:'첫 결과가 나왔어요',x:'<p>예상 성인 키 범위와 가운데 값, 문틀 눈금 위의 지금 키가 나옵니다. 읽는 법은 왼쪽 <b>예측 결과 읽기</b>에서 자세히 안내해요.</p>',pic:img(S+'s15.jpg','예측 결과 화면 154~170cm','결과 화면')}
+ ]},
+ {id:'result',name:'예측 결과 읽기',tabs:[
+  {t:'범위',h:'범위: 10명 중 9명이 들어가는 폭',x:'<p>큰 글씨의 <b>154~170cm</b>가 예상 성인 키 범위예요. 부모 키가 같은 아이 10명 중 9명이 이 안에 든다고 계산한 폭(가운데 값 위아래 8cm)입니다.</p><p>범위가 넓어 보이는 건 정직하게 보여 드리기 때문이에요. 부모 키가 설명하는 몫은 30% 안팎이고, 나머지는 아이마다 달라요.</p><div class="warnbox">진단이 아닌 참고 값이에요. 걱정되면 소아청소년과와 상담해 주세요.</div>',pic:img(S+'s15.jpg','예상 성인 키 범위 화면','범위와 가운데 값')},
+  {t:'가운데 값',h:'가운데 값: 범위의 한가운데',x:'<p><b>가운데 값 162cm</b>는 범위의 한가운데예요. \'꼭 이 키가 된다\'는 뜻이 아니라, 범위를 읽는 기준점이에요.</p><table class="t"><tr><th>계산</th><td>딸 = 160.6 + 0.369 × (아빠 + 엄마 − 334.2)<br>아들 = 173.6 + 0.369 × (아빠 + 엄마 − 334.2)</td></tr><tr><th>예</th><td>아빠 176, 엄마 161인 딸 → 161.7 → 가운데 값 162cm, 범위 154~170cm</td></tr></table><p>근거는 <a href="../#basis">예측 근거</a>에 모두 적어 두었어요.</p>',pic:img(S+'s16.jpg','결과 화면 아래 부분','계산 과정 보기')},
+  {t:'지금 키 위치',h:'지금 키 위치: 문틀 위 연필 선과 동그라미',x:'<p>문틀 눈금 위의 <b>주황 선</b>이 오늘 잰 키예요. 범위 띠 안의 <b>동그라미</b>는 \'지금 키가 같은 나이 안에서 있는 위치를 18세까지 그대로 이어 간다면\' 몇 cm인지 보여 줘요(질병관리청 2017 성장도표, 만 3세~18세 전).</p><p>부모 키 범위와 이 동그라미는 따로, 나란히 보여 드려요. 둘을 억지로 합치지 않아요. 사춘기 전에는 위치가 바뀔 수 있어요.</p>',pic:img(P+'result.jpg','결과 화면, 지금 키 위치로 본 18세 키','지금 키 위치로 본 18세 키')},
+  {t:'초경 뒤 딸',h:'초경을 한 딸은 따로 계산해요',x:'<p>초경을 했다고 넣으면 \'지금 키 + 초경 뒤 남은 성장\'을 함께 보여 드려요.</p><table class="t"><tr><th>초경 나이</th><th>초경 뒤 남은 성장(평균)</th></tr><tr><td>11세 전</td><td>8.2cm</td></tr><tr><td>11~13세</td><td>6.6cm</td></tr><tr><td>13세 뒤</td><td>4.4cm</td></tr><tr><td>첫 1년 동안</td><td>3.8cm</td></tr></table><p>출처: Gaete 외 2025(칠레 여아 534명, 초경 뒤 4년 추적). 초경 뒤에는 성장 속도가 원래 줄어서, 신호등도 빨강·노랑 대신 회색 안내로 보여 드려요.</p>',pic:img(P+'menarche.jpg','초경 뒤 딸의 성장 속도 회색 안내','초경 뒤 안내')}
+ ]},
+ {id:'today',name:'오늘 화면',tabs:[
+  {t:'미션 3개',h:'오늘 미션 세 가지',x:'<p>매일 세 가지를 체크해요.</p><ol><li><b>운동 하나</b>: 고른 운동이 날마다 돌아가며 나와요. 안 고르면 줄넘기·스트레칭·걷기.</li><li><b>잠 9시간 자기</b></li><li><b>식습관 하나</b>: 우유 두 컵, 단백질 반찬, 아침밥이 날마다 돌아가며 나와요.</li></ol><p>미션은 성장기에 좋은 생활 습관을 돕는 활동이에요. 키가 크는 것을 약속하지는 않아요.</p>',pic:img(P+'hometop.jpg','오늘 화면, 미션 세 개','오늘 화면 위쪽')},
+  {t:'성장 속도 신호등',h:'성장 속도 신호등 읽기',x:'<p>최근 기록 사이에 자란 키를 1년으로 환산해, 같은 나이 가운데 아이의 1년 성장량과 견줘요.</p><table class="t"><tr><th>초록</th><td>잘 크고 있어요</td></tr><tr><th>노랑</th><td>조금 느린 편이에요: 가운데의 80%보다 느릴 때. 석 달 뒤 같은 시간에 다시 재 봐요.</td></tr><tr><th>빨강</th><td>소아과 상담을 권해요: 만 4세 이후, 6개월 넘는 간격에서 1년 4cm 이하</td></tr><tr><th>회색</th><td>기록이 하나뿐이거나 간격이 석 달보다 짧을 때, 또는 초경 뒤 딸</td></tr></table><p>키가 앞 기록보다 작게 들어오면 판정 대신 \'측정값을 확인해 주세요\'가 나와요. 상담 권유 기준에 해당하면 그 기준 이름도 무료로 보여 드려요.</p><div class="warnbox">진단이 아닌 상담 권유예요. 해당해도 괜찮은 경우가 많아요.</div>',pic:img(P+'home.jpg','성장 속도 신호등과 상담 권유 안내','성장 속도')},
+  {t:'연속 기록',h:'연속 기록과 지난 7일',x:'<p>미션을 하나라도 체크한 날이 이어지면 연속 기록이 늘어요. 미션 아래 요일 띠에서 지난 7일을 한눈에 볼 수 있어요. 하나만 해도 연속 1일이에요.</p>',pic:img(P+'home2.jpg','오늘 화면, 요일 띠와 가족·설정','지난 7일 띠')}
+ ]},
+ {id:'record',name:'기록하기',tabs:[
+  {t:'키 넣기',h:'새 키 기록 넣기',x:'<p>아래 <b>기록</b> 탭에서 잰 날짜, 키, 몸무게(선택)를 넣고 저장해요. 한 달에 한 번, 같은 시간·같은 방법으로 재면 성장 속도가 가장 믿을 만해요.</p><ul><li>같은 날 기록은 하나만 둬요. 다시 넣으면 확인한 뒤 바꿔요.</li><li>석 달 넘게 떨어진 기록이 생기면 1년 속도로 보여 드려요.</li></ul>',pic:img(P+'record.jpg','새 기록 넣기 화면','기록 탭')},
+  {t:'줄어든 값',h:'키가 줄어들었다고 나올 때',x:'<p>키는 줄어들지 않아요. 앞 기록보다 작게 들어오면 \'다시 재 보세요\' 안내가 나오고, 신호등은 판정을 내지 않아요. 아침에 신발을 벗고 벽에 붙어 다시 재면 기록을 바꿀 수 있어요.</p>',pic:img(P+'record.jpg','다시 재 보세요 안내','다시 재기 안내')}
+ ]},
+ {id:'exercise',name:'운동 고르기 22가지',tabs:[
+  {t:'고르는 법',h:'좋아하는 운동을 여러 개 고르세요',x:'<p>오늘 화면의 <b>운동 고르기</b>를 누르고 아이가 좋아하는 운동에 체크해요. 고른 운동이 날마다 돌아가며 오늘 미션에 나와요.</p><p>묶음은 네 가지예요: 집 근처에서 짧게, 공으로 친구와, 밖에서, 배우는 운동.</p>',pic:img(P+'exercise.jpg','운동 고르기 화면','운동 고르기')},
+  {t:'22가지 모두',h:'운동 22가지',wide:true,x:'<div id="exlist"></div>'}
+ ]},
+ {id:'together',name:'함께하기',tabs:[
+  {t:'공식 도전 6개',h:'공식 도전 여섯 가지',x:'<p>아래 <b>함께</b> 탭에서 바로 참여할 수 있는 도전이에요. 도구 없이 바로 하는 운동 위주로 골랐어요(세계보건기구 2020 어린이·청소년 신체활동 권고: 하루 평균 60분 활동, 주 3번 이상 뛰고 점프하는 운동).</p><table class="t"><tr><th>도전</th><th>기간</th><th>완주 기준</th></tr><tr><td>줄넘기 30일</td><td>30일</td><td>20일 기록</td></tr><tr><td>잠 9시간 2주</td><td>14일</td><td>9시간 잔 날 10일</td></tr><tr><td>달리기 4주</td><td>28일</td><td>한 날 12일</td></tr><tr><td>계단 오르기 2주</td><td>14일</td><td>한 날 10일</td></tr><tr><td>스트레칭 2주</td><td>14일</td><td>한 날 10일</td></tr><tr><td>농구 4주</td><td>28일</td><td>한 날 12일</td></tr></table>',pic:img(P+'together.jpg','공식 도전 여섯 가지 화면','함께 탭')},
+  {t:'가족 도전',h:'우리 가족 도전 만들기',x:'<p>\'함께\' 탭 아래 \'우리 가족 도전\'에서 이름·기간·목표를 정해 만들어요. 예: 줄넘기 1주. 지금 기록하는 사람(아이·보호자)을 위에서 바꿔 가며 각자 체크해요.</p><p>도전 화면에서 오늘 체크, 다 같이 채우기 막대, 기록표를 볼 수 있어요.</p>',pic:img(P+'challenge.jpg','반 친구 도전 줄넘기 1주 상세 화면','도전 상세')},
+  {t:'초대 코드',h:'초대 코드로 부르고, 참여하기',x:'<p><b>부르는 사람</b>: 도전 화면 아래 \'초대\'에서 초대 코드를 확인하고 <b>초대 링크 보내기</b>를 눌러 카톡 등으로 보내요. 안내 글이 함께 가요.</p><p><b>받은 사람</b>:</p><ol><li>키록 앱이 없으면 먼저 설치해요.</li><li>앱 아래 \'함께\' 탭 → <b>받은 초대 코드로 참여</b>에 코드를 넣어요.</li></ol><p>앱이 있는 휴대폰에서는 링크를 누르면 바로 열려요.</p>',pic:img(P+'invite.jpg','응원 보내기와 초대 코드 화면','응원과 초대')},
+  {t:'응원',h:'응원 보내기',x:'<p>기록표에서 사람을 누르고 정해진 응원 문구 중 하나를 보내요. 아이들이 쓰는 앱이라 자유 글은 받지 않아요.</p><ul><li>오늘도 해냈네요</li><li>힘내요, 잘하고 있어요</li><li>정말 멋져요</li><li>꾸준한 모습이 최고예요</li><li>오늘은 푹 쉬어도 괜찮아요</li><li>같이 해서 좋아요</li></ul><p>같은 사람에게는 하루 3번까지 보낼 수 있어요.</p>',pic:img(P+'invite.jpg','응원 문구 여섯 가지','응원 보내기')}
+ ]},
+ {id:'report',name:'리포트',tabs:[
+  {t:'무료 장',h:'무료로 보는 리포트',x:'<table class="t"><tr><th>1장</th><td>키 위치 변화: 같은 나이 안에서 위치가 어떻게 바뀌었는지 곡선과 한 줄 풀이</td></tr><tr><th>4장</th><td>사춘기·초경 시기 일반 안내</td></tr></table><p>상담 권유 기준에 해당하는지는 오늘 화면에서 무료로 알려 드려요.</p>',pic:img(P+'report1.jpg','리포트 1장 키 위치 변화','1장')},
+  {t:'유료 장',h:'자세한 리포트(유료)',x:'<table class="t"><tr><th>2장</th><td>월별 성장 속도 해석</td></tr><tr><th>3장</th><td>기록이 쌓이며 달라지는 예측</td></tr><tr><th>5장</th><td>상담을 권하는 일반 기준 풀이: 기준마다 해당·해당 없음·자료 부족과 상담 때 보여 줄 기록 표</td></tr><tr><th>6장</th><td>병원·가족에게 보여 줄 한 장 정리(이미지·PDF 저장)</td></tr></table>',pic:img(P+'report5.jpg','리포트 5장 상담 기준','5장')},
+  {t:'요금',h:'요금 고르기',x:'<table class="t"><tr><th>리포트 한 번</th><td>2,900원. 이번 달 자세한 리포트 1회, 처음 등록한 아이 몫</td></tr><tr><th>평생권</th><td>29,000원. 한 번 결제, 기한 없음, 아이 여러 명</td></tr><tr><th>연 구독</th><td>19,900원. 매달 새 리포트, 아이 여러 명, 자동 갱신·언제든 해지</td></tr><tr><th>월 구독</th><td>4,900원. 매달 새 리포트, 아이 여러 명, 자동 갱신·언제든 해지</td></tr></table><p>결제는 구글 플레이 결제로만 받아요. 출시 전인 지금은 결제가 없어요.</p>',pic:img(P+'report6.jpg','리포트 6장 가족 공유용 한 장','6장')}
+ ]},
+ {id:'share',name:'공유·백업·기기 바꾸기',tabs:[
+  {t:'한 장 공유',h:'가족에게 한 장으로 보내기',x:'<p>아래 <b>공유</b> 탭(리포트 6장)에서 한 장 정리를 이미지나 PDF로 저장해 가족에게 보내거나 병원에 가져갈 수 있어요. 이름(별명)을 빼고 저장할 수도 있어요.</p>',pic:img(P+'report6img.jpg','저장된 한 장 이미지','저장된 이미지')},
+  {t:'백업',h:'기록 백업(무료)',x:'<ol><li>오늘 화면 맨 아래 \'가족·설정\'의 <b>기록 백업·불러오기 (무료)</b>를 눌러요.</li><li><b>백업 글 보내기</b>(웹에서는 백업 글 만들기)를 누르면 기록 전체가 글 한 덩어리로 나와요.</li><li>그 글을 카톡 나에게 보내기·메일·메모에 보관해요.</li></ol><p>백업 글에는 별명·생년월·키 기록·오늘 미션·함께하기 기록이 들어가고, 사진은 빠져요.</p>',pic:img(P+'backup.jpg','기록 백업 화면','기록 백업')},
+  {t:'기기 바꾸기',h:'새 휴대폰으로 옮기기',x:'<ol><li>예전 휴대폰에서 백업 글을 만들어 보관해요.</li><li>새 휴대폰에 키록을 설치해요.</li><li>첫 화면의 <b>다른 휴대폰의 기록 불러오기</b>를 누르고 백업 글 전체를 붙여 넣어요.</li></ol><div class="warnbox">불러오면 지금 이 휴대폰의 기록은 백업 내용으로 바뀌어요.</div>',pic:img(S+'s01.jpg','첫 화면의 다른 휴대폰의 기록 불러오기','첫 화면 아래 글자 단추')}
+ ]},
+ {id:'faq',name:'자주 묻는 질문',tabs:[{t:'모두 보기',h:'자주 묻는 질문',wide:true,x:'<dl class="faq" id="faqlist"></dl><p><a class="btn main" href="../support/">더 묻기·문의 남기기</a></p>'}]}
+];
+var EX=[['short','집 근처에서 짧게',[['jumprope','줄넘기',15],['hangbar','철봉 매달리기',5],['stretching','스트레칭',10],['yoga','어린이 요가',15],['stairs','계단 오르기',10],['hulahoop','훌라후프',10],['dance','케이팝 댄스',20],['trampoline','트램펄린',20],['running','달리기',20]]],
+ ['ball','공으로 친구와',[['basketball','농구',30],['soccer','축구',30],['volleyball','배구',30],['dodgeball','피구',30],['badminton','배드민턴',30],['pingpong','탁구',30]]],
+ ['outdoor','밖에서',[['walking','걷기',30],['cycling','자전거',30],['inline','인라인',30]]],
+ ['class','배우는 운동',[['swimming','수영',30],['taekwondo','태권도',30],['ballet','발레',30],['climbing','클라이밍',30]]]];
+</script>
+<script>
+(function(){
+  var cats=document.getElementById('cats'),tabs=document.getElementById('tabs'),stage=document.getElementById('stage'),nowl=document.getElementById('nowline');
+  var ci=0,ti=0;
+  CH.forEach(function(c,i){var b=document.createElement('button');b.setAttribute('role','tab');b.innerHTML='<i>'+(i+1)+'</i>'+c.name;b.onclick=function(){go(i,0,true)};cats.appendChild(b);});
+  function video(){return '<div class="video" id="vbox"><video id="mv" controls preload="metadata" playsinline poster="manual_poster.jpg" src="manual.mp4"></video><div class="wait"><b>영상 준비 중</b><span>곧 이 자리에서 재생됩니다. 그동안 위 탭을 넘기며 사진으로 보세요.</span></div></div>';}
+  function render(){
+    var c=CH[ci],t=c.tabs[ti];
+    [].forEach.call(cats.querySelectorAll('button'),function(b,i){b.setAttribute('aria-selected',i===ci)});
+    tabs.innerHTML='';
+    c.tabs.forEach(function(x,i){var b=document.createElement('button');b.setAttribute('role','tab');b.setAttribute('aria-selected',i===ti);b.textContent=x.t;b.onclick=function(){go(ci,i,true)};tabs.appendChild(b);});
+    var sel=tabs.children[ti]; if(sel&&sel.scrollIntoView)sel.scrollIntoView({block:'nearest',inline:'nearest'});
+    var last=ci===CH.length-1&&ti===c.tabs.length-1;
+    var nxt=ti<c.tabs.length-1?c.tabs[ti+1].t:(CH[ci+1]?CH[ci+1].name:'');
+    nowl.innerHTML='<b>'+c.name+'</b> '+(ti+1)+'/'+c.tabs.length+(nxt?' &nbsp; 다음: '+nxt:'');
+    document.getElementById('prev').disabled=ci===0&&ti===0;
+    document.getElementById('next').disabled=last;
+    var h='<div class="txt'+(t.wide||t.video?' wide':'')+'"><h2>'+t.h+'</h2>'+(t.video?video():'')+(t.video?'<div style="margin-top:14px">'+t.x+'</div>':t.x)+'</div>';
+    if(t.pic)h+='<figure class="pic" style="margin:0"><img src="'+t.pic.src+'" alt="'+t.pic.alt+'" width="780"><figcaption>'+t.pic.cap+'</figcaption></figure>';
+    stage.innerHTML=h; stage.scrollTop=0;
+    if(t.video){var v=document.getElementById('mv'),box=document.getElementById('vbox');
+      v.addEventListener('error',function(){box.classList.add('none')},true);
+      fetch('manual.mp4',{method:'HEAD'}).then(function(r){if(!r.ok)box.classList.add('none')}).catch(function(){box.classList.add('none')});}
+    if(document.getElementById('exlist'))document.getElementById('exlist').innerHTML=EX.map(function(g){return '<h3 class="ch">'+g[1]+'</h3><div class="exgrid">'+g[2].map(function(e){return '<figure><img loading="lazy" src="'+E+e[0]+'.jpg" alt="'+e[1]+' 그림" width="240" height="240"><figcaption>'+e[1]+'<small>'+e[2]+'분</small></figcaption></figure>'}).join('')+'</div>'}).join('');
+    if(document.getElementById('faqlist'))document.getElementById('faqlist').innerHTML=(window.KIROK_FAQ||[]).map(function(f){return '<dt>'+f.q+'</dt><dd>'+f.a.replace(/\{root\}/g,'../')+'</dd>'}).join('');
+  }
+  function go(c,t,push){ci=c;ti=t;render();if(push)try{history.replaceState(null,'','#'+CH[ci].id+(ti?'-'+ti:''))}catch(e){}}
+  document.getElementById('next').onclick=function(){var c=CH[ci];if(ti<c.tabs.length-1)go(ci,ti+1,true);else if(CH[ci+1])go(ci+1,0,true);};
+  document.getElementById('prev').onclick=function(){if(ti>0)go(ci,ti-1,true);else if(ci>0)go(ci-1,CH[ci-1].tabs.length-1,true);};
+  document.addEventListener('keydown',function(e){if(e.target.tagName==='INPUT')return;if(e.key==='ArrowRight')document.getElementById('next').click();if(e.key==='ArrowLeft')document.getElementById('prev').click();});
+  function fromHash(){var m=(location.hash||'').slice(1).split('-');var idx=CH.findIndex(function(c){return c.id===m[0]});
+  if(idx>=0)go(idx,Math.min(parseInt(m[1]||'0',10)||0,CH[idx].tabs.length-1),false);else render();}
+  window.addEventListener('hashchange',fromHash);fromHash();
+})();
+</script>
+<script src="../assets/common.js"></script>
+</body>
+</html>

@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>키록 문의</title>
+<meta name="description" content="키록 설치, 예측 정확도, 결제·환불, 개인정보, 기기 변경, 함께하기 초대, 오류 신고를 바로 답해 드리고 문의를 받습니다.">
+<meta property="og:title" content="키록 문의 — 바로 답하기와 문의 남기기">
+<meta property="og:description" content="자주 묻는 질문은 바로 답해 드리고, 그 밖의 질문은 문의를 남겨 주세요.">
+<meta property="og:image" content="https://wonyul01-collab.github.io/kirok/og.jpg">
+<meta property="og:url" content="https://wonyul01-collab.github.io/kirok/support/">
+<link rel="icon" href="../assets/favicon.png">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+<link rel="stylesheet" href="../assets/site.css">
+<style>
+.sup{display:grid;grid-template-columns:260px minmax(0,1fr) 360px;gap:0;max-width:1300px;margin:0 auto;min-height:calc(100vh - 62px)}
+.qcats{border-right:1px solid var(--line);padding:18px 0}
+.qcats h1{font-size:22px;padding:0 18px 12px}
+.qcats button{display:block;width:100%;text-align:left;border:0;border-left:4px solid transparent;background:none;padding:11px 18px;font:inherit;font-size:16px;cursor:pointer;color:var(--ink)}
+.qcats button[aria-selected=true]{border-left-color:var(--green);background:var(--white);font-weight:800;color:var(--green-deep)}
+.ans{padding:24px 28px}
+.ans h2{font-size:26px;margin-bottom:12px}
+.ans .a{font-size:17px;max-width:38em;background:var(--white);border:1.5px solid var(--ink);border-radius:10px;padding:18px 20px}
+.ans form.free{display:flex;gap:8px;margin-top:22px;max-width:38em}
+.ans form.free input{flex:1;min-width:0;height:50px;border:1.5px solid var(--line2);border-radius:8px;padding:0 12px;font:inherit;font-size:16px}
+.ans .hint{font-size:15px;color:var(--sub);margin-top:8px}
+.leave{border-left:1px solid var(--line);padding:24px 22px;background:var(--white)}
+.leave h2{font-size:22px;margin-bottom:6px}
+.leave label{display:block;font-size:15px;font-weight:700;margin:14px 0 6px}
+.leave select,.leave textarea,.leave input{width:100%;font:inherit;font-size:16px;border:1.5px solid var(--line2);border-radius:8px;padding:10px 12px;background:#fff}
+.leave textarea{min-height:140px;resize:vertical}
+.leave .count{font-size:13px;color:var(--faint);text-align:right}
+.leave .result{margin-top:12px;font-size:15.5px;padding:10px 12px;border-radius:8px;display:none}
+.leave .result.ok{display:block;background:var(--green-soft);color:var(--green-deep)}
+.leave .result.bad{display:block;background:var(--pencil-soft);color:var(--warn)}
+.leave .kakao-box{margin-top:22px;border-top:1px solid var(--line);padding-top:16px}
+#refund-box{margin-top:26px;max-width:38em}
+#refund-box h3{font-size:19px;margin-bottom:8px}
+#refund-box table{border-collapse:collapse;width:100%;font-size:15px;background:#fff}
+#refund-box td,#refund-box th{border-bottom:1px solid var(--line);padding:9px 10px;text-align:left;vertical-align:top}
+@media (max-width:1100px){.sup{grid-template-columns:220px minmax(0,1fr)}.leave{grid-column:1 / -1;border-left:0;border-top:1px solid var(--line)}}
+@media (max-width:720px){
+  .sup{display:block}
+  .qcats{display:flex;flex-wrap:wrap;gap:6px;border-right:0;padding:16px}
+  .qcats h1{width:100%;padding:0 0 4px}
+  .qcats button{width:auto;border:1px solid var(--line2);border-radius:6px;padding:8px 12px;font-size:15px}
+  .qcats button[aria-selected=true]{border-color:var(--green);background:var(--green-soft)}
+  .ans{padding:18px 16px}
+  .leave{padding:20px 16px 100px}
+}
+</style>
+</head>
+<body data-root="../" data-page="support" data-noask="1">
+<a class="skip" href="#ans">본문으로 건너뛰기</a>
+<header id="top"></header>
+<main class="sup">
+  <nav class="qcats" id="qcats" role="tablist" aria-label="질문 묶음"><h1>무엇이 궁금하세요?</h1></nav>
+  <section class="ans" id="ans" aria-live="polite">
+    <h2 id="aq"></h2>
+    <div class="a" id="aa"></div>
+    <form class="free" id="free"><label class="skip" for="fq">직접 묻기</label><input id="fq" placeholder="직접 물어보세요. 예: 아이폰에서도 되나요?" maxlength="200" autocomplete="off"><button class="btn main" type="submit">묻기</button></form>
+    <p class="hint">미리 준비한 답에서 찾아 바로 보여 드려요. 맞는 답이 없으면 오른쪽 '문의 남기기'로 보내 주세요.</p>
+    <div id="refund-box">
+      <h3 id="refund">환불·해지 안내</h3>
+      <table>
+        <tr><th>결제하는 곳</th><td>구글 플레이 결제(키록이 카드 정보를 받지 않아요)</td></tr>
+        <tr><th>구독 해지</th><td>구글 플레이 앱 → 프로필 → 결제 및 정기 결제 → 정기 결제 → 키록 → 해지. 해지해도 낸 기간 끝까지 쓸 수 있어요.</td></tr>
+        <tr><th>환불</th><td>구글 플레이 환불 규정을 따라요. 구매 직후라면 구글 플레이에서 직접 환불을 요청할 수 있어요. 그 밖의 경우는 문의를 남겨 주시면 확인해 드려요.</td></tr>
+        <tr><th>지금</th><td>출시 전이라 결제가 없어요(웹 체험판은 무료).</td></tr>
+      </table>
+    </div>
+  </section>
+  <aside class="leave" id="leave">
+    <h2>문의 남기기</h2>
+    <p style="font-size:15px;color:var(--sub);margin:0">사람이 읽고 답해 드려요. 답을 받으려면 연락처를 남겨 주세요(선택).</p>
+    <form id="lf">
+      <label for="lc">종류</label>
+      <select id="lc"><option>설치</option><option>예측 정확도</option><option>결제</option><option>환불</option><option>개인정보</option><option>탈퇴</option><option>기기 변경</option><option>함께하기 초대</option><option>오류 신고</option><option selected>기타</option></select>
+      <label for="lm">내용</label>
+      <textarea id="lm" maxlength="1000" required placeholder="어떤 화면에서 무엇을 했을 때인지 함께 써 주시면 빨리 확인할 수 있어요."></textarea>
+      <div class="count"><span id="lcnt">0</span>/1000</div>
+      <label for="lk">답 받을 연락처(선택)</label>
+      <input id="lk" maxlength="100" placeholder="카톡 아이디, 전화번호, 이메일 중 편한 것">
+      <p style="font-size:13.5px;color:var(--sub);margin:8px 0 0">남긴 내용과 연락처는 답변에만 씁니다. 아이 이름·키 같은 정보는 쓰지 않아도 돼요.</p>
+      <button class="btn main" type="submit" style="width:100%;margin-top:14px">문의 보내기</button>
+      <div class="result" id="lres" role="status"></div>
+    </form>
+    <div class="kakao-box">
+      <b style="font-size:17px">카카오톡으로 묻기</b>
+      <p style="font-size:15px;color:var(--sub);margin:6px 0 10px">카카오톡 채널 '키록'에서 1:1로 물어볼 수 있어요.</p>
+      <div id="kbtn"></div>
+    </div>
+  </aside>
+</main>
+<footer id="foot"></footer>
+<script src="../site.config.js"></script>
+<script src="../assets/faq.js"></script>
+<script src="../assets/common.js"></script>
+<script>
+(function(){
+  var FAQ=window.KIROK_FAQ, C=window.KIROK_CONFIG||{};
+  var cats=document.getElementById('qcats'), aq=document.getElementById('aq'), aa=document.getElementById('aa');
+  function show(i){var f=FAQ[i];aq.textContent=f.q;aa.innerHTML=f.a.replace(/\{root\}/g,'../');
+    [].forEach.call(cats.querySelectorAll('button'),function(b,j){b.setAttribute('aria-selected',j===i)});
+    document.getElementById('lc').value=[].slice.call(document.getElementById('lc').options).some(function(o){return o.text===f.cat})?f.cat:'기타';}
+  FAQ.forEach(function(f,i){var b=document.createElement('button');b.type='button';b.setAttribute('role','tab');b.textContent=f.cat;b.onclick=function(){show(i)};cats.appendChild(b);});
+  var start=0; if(location.hash==='#refund')start=FAQ.findIndex(function(f){return f.id==='refund'});
+  show(start<0?0:start);
+  document.getElementById('free').addEventListener('submit',function(e){e.preventDefault();var q=document.getElementById('fq').value.trim();if(!q)return;
+    var f=window.kirokBestAnswer(q);
+    if(f){show(FAQ.indexOf(f));}
+    else{aq.textContent='“'+q+'”';aa.innerHTML='이 질문은 미리 준비한 답이 없어요. 오른쪽 <b>문의 남기기</b>에 그대로 보내 주시면 사람이 확인해 답해 드려요.';document.getElementById('lm').value=q;cnt();}});
+  var lm=document.getElementById('lm'); function cnt(){document.getElementById('lcnt').textContent=lm.value.length} lm.addEventListener('input',cnt);
+  var k=window.kirokKakaoUrl&&window.kirokKakaoUrl();
+  document.getElementById('kbtn').innerHTML=k?'<a class="btn kakao" style="width:100%" href="'+k+'" target="_blank" rel="noopener">카카오톡 채널로 묻기</a>':'<span class="btn kakao off" style="width:100%" aria-disabled="true">카카오톡 채널 준비 중</span>';
+  var res=document.getElementById('lres');
+  function fail(){res.className='result bad';res.innerHTML='지금 문의를 보내지 못했어요. '+(k?'<a href="'+k+'" target="_blank" rel="noopener">카카오톡 채널</a>로 보내 주세요.':'카카오톡 채널을 여는 중이니 잠시 뒤 다시 보내 주세요.');}
+  document.getElementById('lf').addEventListener('submit',function(e){e.preventDefault();
+    var msg=lm.value.trim(), contact=document.getElementById('lk').value.trim();
+    if(msg.length<2){res.className='result bad';res.textContent='내용을 써 주세요.';return;}
+    if(!C.SUPABASE_URL||!C.SUPABASE_KEY){fail();return;}
+    var btn=e.target.querySelector('button[type=submit]');btn.disabled=true;btn.textContent='보내는 중';
+    fetch(C.SUPABASE_URL.replace(/\/$/,'')+'/rest/v1/inquiries',{method:'POST',headers:{'apikey':C.SUPABASE_KEY,'Authorization':'Bearer '+C.SUPABASE_KEY,'Content-Type':'application/json','Prefer':'return=minimal'},
+      body:JSON.stringify({category:document.getElementById('lc').value,message:msg.slice(0,1000),contact:contact?contact.slice(0,100):null,page:location.pathname.slice(0,200)})})
+    .then(function(r){if(r.ok){res.className='result ok';res.textContent='문의를 받았어요. 확인한 뒤 남겨 주신 연락처로 답해 드릴게요.';lm.value='';cnt();}else fail();})
+    .catch(fail).then(function(){btn.disabled=false;btn.textContent='문의 보내기';});
+  });
+  if(location.hash==='#leave')setTimeout(function(){lm.focus()},200);
+})();
+</script>
+</body>
+</html>

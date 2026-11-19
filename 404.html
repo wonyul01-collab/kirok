@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>키록 · 페이지를 찾을 수 없어요</title>
+<script>
+/* 웹 체험판(/kirok/app/...) 안쪽 주소로 새로 고치면 GitHub Pages 가 이 파일을 준다. 체험판 첫 화면으로 보낸 뒤 원래 주소로 되돌린다. */
+(function(){
+  var p=location.pathname;
+  if(/^\/kirok\/app(\/|$)/.test(p)){
+    try{sessionStorage.setItem('kirok_spa_path',p+location.search+location.hash);}catch(e){}
+    location.replace('/kirok/app/'+(location.search||''));
+  }
+})();
+</script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+<link rel="stylesheet" href="/kirok/assets/site.css">
+</head>
+<body data-root="/kirok/" data-page="">
+<header id="top"></header>
+<main class="wrap" style="padding:80px 20px 120px;max-width:720px">
+  <h1 style="font-size:34px">이 주소에는 페이지가 없어요</h1>
+  <p style="font-size:18px;color:var(--sub);margin-top:14px">주소가 바뀌었거나 잘못 입력된 것 같아요. 아래에서 가려던 곳을 골라 주세요.</p>
+  <p style="display:flex;gap:10px;flex-wrap:wrap;margin-top:24px"><a class="btn main" href="/kirok/">처음으로</a><a class="btn" href="/kirok/manual/">사용 설명서</a><a class="btn" href="/kirok/app/">웹 체험판</a><a class="btn" href="/kirok/support/">문의</a></p>
+</main>
+<footer id="foot"></footer>
+<script src="/kirok/site.config.js"></script>
+<script src="/kirok/assets/faq.js"></script>
+<script src="/kirok/assets/common.js"></script>
+</body>
+</html>
